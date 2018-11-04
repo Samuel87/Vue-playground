@@ -4,23 +4,23 @@
     <div id="vue-container">
 
         <!--
-          -- Create an instance of the 'vue-user-list' component
-          -- and pass 'userIds' to the registered prop 'params'.
+          Create an instance of the 'vue-user-list' component
+          and pass 'userIds' to the registered prop 'params'.
           -->
         <vue-users-list :params='userIds'>
 
             <!--
-              -- Define custom slots to component with a scope, slot
-              -- location is defined in the template.
+              Define custom slots to component with a scope, slot
+              location is defined in the template.
               -->
             <p slot-scope="customSlot">im a slot</p>
         </vue-users-list>
 
         <!--
-          -- Example of changing data with events. Since the element
-          -- is outside of the 'vue-user-list' component, the 'addUser'
-          -- method has to be defined in the main Vue instance.
-          -- This is also why userIds are not defined in the component.
+          Example of changing data with events. Since the element
+          is outside of the 'vue-user-list' component, the 'addUser'
+          method has to be defined in the main Vue instance.
+          This is also why userIds are not defined in the component.
           -->
         <button @click="addUser" data-user-id="2">Change</button>
     </div>
