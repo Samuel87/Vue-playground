@@ -1,7 +1,7 @@
-<div class="container">
+<div class='container'>
 
     <!-- Vue root -->
-    <div id="vue-container">
+    <div id='vue-container'>
 
         <!--
           Create an instance of the 'vue-user-list' component
@@ -13,7 +13,7 @@
               Define custom slots to component with a scope, slot
               location is defined in the template.
               -->
-            <p slot-scope="customSlot">im a slot</p>
+            <p slot-scope='customSlot'>im a slot</p>
         </vue-users-list>
 
         <!--
@@ -22,14 +22,14 @@
           method has to be defined in the main Vue instance.
           This is also why userIds are not defined in the component.
           -->
-        <button @click="addUser" data-user-id="2">Change</button>
+        <button @click='addUser' data-user-id='2'>Change</button>
     </div>
 </div>
 
 <!-- 'vue-user-list' component template -->
-<script type="text/x-template" id="vue-user-list-template">
+<script type='text/x-template' id='vue-user-list-template'>
     <ul>
-        <li v-for="(user, i) in users" v-bind:key="user.id">
+        <li v-for='(user, i) in users' v-bind:key='user.id'>
             <div>{{ user.name | uppercase }}</div>
             <div>{{ user.email }}</div>
             <div>{{ user.company.name }}</div>
@@ -38,9 +38,9 @@
     </ul>
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
 <!-- HTTP client for Vue -->
-<script src="https://cdn.jsdelivr.net/npm/vue-resource/dist/vue-resource.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/vue-resource/dist/vue-resource.js'></script>
 
 <script>
     Vue.component('vue-users-list', {
