@@ -121,7 +121,7 @@ var vm = new Vue({
     },
     methods: {
         addUser: function(e, filter) {
-            this.filterCleared = false;
+            this.filtersActive = false;
 
             for (var i in this.userIds) {
                 if (filter.id === this.userIds[i].id) {
@@ -142,7 +142,7 @@ var vm = new Vue({
                 }
             }
 
-            this.filterCleared = true;
+            this.filtersActive = true;
             this.userIds = [];
         }
     }
