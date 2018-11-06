@@ -9,9 +9,10 @@
           method has to be defined in the main Vue instance.
           This is also why userIds are not defined in the component.
           -->
-        <button v-for='filter in filters' @click='addUser($event, filter)'>
-            Filter user #{{ filter }}
+        <button v-for='(filter, key) in filters' :key="key" @click='addUser($event, filter)' :class="{ active : filter.active }">
+            Filter user #{{ filter.id }}
         </button>
+        <button @click='clearFilter' :class="{ active : filterCleared }">All</button>
 
         <!--
           Create an instance of the 'vue-user-list' component
@@ -96,23 +97,42 @@ Vue.filter('uppercase', function(value) {
 var vm = new Vue({
     el: '#vue-container',
     data: {
-        userIds: [{
-            id: 1,
-        }],
-        filters: [1, 2, 3, 4, 5]
+        userIds: [],
+        filters: [
+            { id: 1, active: false },
+            { id: 2, active: false },
+            { id: 3, active: false },
+            { id: 4, active: false },
+            { id: 5, active: false }
+        ],
+        filterCleared: true
     },
     methods: {
-        addUser: function(event, id) {
+        addUser: function(e, filter) {
+            this.filterCleared = false;
+
             for (var i in this.userIds) {
-                if (id === this.userIds[i].id) {
+                if (filter.id === this.userIds[i].id) {
+                    filter.active = false;
                     this.userIds.splice(i, 1);
 
                     return false;
                 }
             }
 
-            this.userIds.push({ id: id });
+            filter.active = true;
+            this.userIds.push({ id: filter.id });
         },
+        clearFilter: function(e) {
+            for (var i in this.filters) {
+                if (this.filters[i].active) {
+                    this.filters[i].active = false;
+                }
+            }
+
+            this.filterCleared = true;
+            this.userIds = [];
+        }
     }
 });
 </script>
