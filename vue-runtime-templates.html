@@ -19,7 +19,7 @@
 
         <button
             @click='clearUsers'
-            :class="{ active : filtersActive }"
+            :class="{ active : filtersInactive }"
         >
         All</button>
 
@@ -117,11 +117,11 @@ var vm = new Vue({
             { id: 4, active: false },
             { id: 5, active: false }
         ],
-        filtersActive: true
+        filtersInactive: true
     },
     methods: {
         addUser: function(e, filter) {
-            this.filtersActive = false;
+            this.filtersInactive = false;
 
             for (var i in this.userIds) {
                 if (filter.id === this.userIds[i].id) {
@@ -142,7 +142,7 @@ var vm = new Vue({
                 }
             }
 
-            this.filtersActive = true;
+            this.filtersInactive = true;
             this.userIds = [];
         }
     }
