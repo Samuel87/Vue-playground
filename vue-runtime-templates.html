@@ -4,6 +4,16 @@
     <div id='vue-container'>
 
         <!--
+          Example of changing data with events. Since the element
+          is outside of the 'vue-user-list' component, the 'addUser'
+          method has to be defined in the main Vue instance.
+          This is also why userIds are not defined in the component.
+          -->
+        <button v-for='filter in filters' @click='addUser($event, filter)'>
+            Filter user #{{ filter }}
+        </button>
+
+        <!--
           Create an instance of the 'vue-user-list' component
           and pass 'userIds' to the registered prop 'params'.
           -->
@@ -15,21 +25,14 @@
               -->
             <p slot-scope='customSlot'>im a slot</p>
         </vue-users-list>
-
-        <!--
-          Example of changing data with events. Since the element
-          is outside of the 'vue-user-list' component, the 'addUser'
-          method has to be defined in the main Vue instance.
-          This is also why userIds are not defined in the component.
-          -->
-        <button @click='addUser' data-user-id='2'>Change</button>
     </div>
 </div>
 
 <!-- 'vue-user-list' component template -->
 <script type='text/x-template' id='vue-user-list-template'>
     <ul>
-        <li v-for='(user, i) in users' v-bind:key='user.id'>
+        <li v-for='(user, i) in users' :key='user.id'>
+            <div>{{ user.id }}</div>
             <div>{{ user.name | uppercase }}</div>
             <div>{{ user.email }}</div>
             <div>{{ user.company.name }}</div>
@@ -38,68 +41,79 @@
     </ul>
 </script>
 
-<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
 <!-- HTTP client for Vue -->
-<script src='https://cdn.jsdelivr.net/npm/vue-resource/dist/vue-resource.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vue-resource/dist/vue-resource.min.js'></script>
 
 <script>
-    Vue.component('vue-users-list', {
-        template: '#vue-user-list-template',
+/* global Vue */
 
-        /*
-         * This prop option was passed the value of 'UserIds' when the instance
-         * was created. When a value is passed to a prop attribute, it becomes
-         * a property on that component instance.
-         */
-        props: ['params'],
-        data: function() {
-            return {
-                users: {},
-            };
-        },
-        created: function() {
+Vue.component('vue-users-list', {
+    template: '#vue-user-list-template',
+
+    /*
+     * This prop option was passed the value of 'UserIds' when the instance
+     * was created. When a value is passed to a prop attribute, it becomes
+     * a property on that component instance.
+     */
+    props: ['params'],
+    data: function() {
+        return {
+            users: {},
+        };
+    },
+    created: function() {
+        this.fetchData();
+    },
+    watch: {
+        // Watch for params change.
+        params: function(newVal, oldVal) {
             this.fetchData();
-        },
-        watch: {
-            // Watch for params change.
-            params: function(newVal, oldVal) {
-                this.fetchData();
-            }
-        },
-        methods: {
-            fetchData: function() {
-                var encodedParams = this.params.map(function(key) {
-                    return 'id=' + key.id;
-                }).join('&');
-
-                this.$http.get('https://jsonplaceholder.typicode.com/users/?' + encodedParams)
-                .then(function(response) {
-                    this.users = response.body;
-                }, function(error) {
-                    console.error(error);
-                });
-            }
         }
-    });
+    },
+    methods: {
+        fetchData: function() {
+            var encodedParams = '';
+            encodedParams = this.params.map(function(key) {
+                return 'id=' + key.id;
+            }).join('&');
 
-    // Custom filters can be user in the component template.
-    Vue.filter('uppercase', function(value) {
-        return value.toUpperCase();
-    });
-
-    // Main Vue instance
-    var vm = new Vue({
-        el: '#vue-container',
-        data: {
-            userIds: [{
-                id: 1,
-            }],
-        },
-        methods: {
-            addUser: function(event) {
-               this.userIds.push({id: event.target.getAttribute('data-user-id')});
-            },
+            this.$http.get('https://jsonplaceholder.typicode.com/users/?' + encodedParams).then(function(response) {
+                this.users = response.body;
+            }, function(error) {
+                console.error(error);
+            });
         }
-    });
+    }
+});
+
+// Custom filters can be user in the component template.
+Vue.filter('uppercase', function(value) {
+    return value.toUpperCase();
+});
+
+// Main Vue instance
+var vm = new Vue({
+    el: '#vue-container',
+    data: {
+        userIds: [{
+            id: 1,
+        }],
+        filters: [1, 2, 3, 4, 5]
+    },
+    methods: {
+        addUser: function(event, id) {
+            for (var i in this.userIds) {
+                if (id === this.userIds[i].id) {
+                    this.userIds.splice(i, 1);
+
+                    return false;
+                }
+            }
+
+            this.userIds.push({ id: id });
+        },
+    }
+});
 </script>
 
