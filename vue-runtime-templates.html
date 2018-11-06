@@ -18,8 +18,8 @@
         Filter user #{{ filter.id }}</button>
 
         <button
-            @click='clearFilter'
-            :class="{ active : filterCleared }"
+            @click='clearUsers'
+            :class="{ active : filtersActive }"
         >
         All</button>
 
@@ -45,7 +45,7 @@
             <div>{{ user.id }}</div>
             <div>{{ user.name | uppercase }}</div>
             <div>{{ user.email }}</div>
-            <div>{{ user.company.name }}</div>
+            <div>{{ checkUserCompany(user.company) }}</div>
             <slot customSlot></slot>
         </li>
     </ul>
@@ -93,6 +93,9 @@ Vue.component('vue-users-list', {
             }, function(error) {
                 console.error(error);
             });
+        },
+        checkUserCompany: function(company) {
+            return company ? company.name : 'user not in company';
         }
     }
 });
@@ -114,7 +117,7 @@ var vm = new Vue({
             { id: 4, active: false },
             { id: 5, active: false }
         ],
-        filterCleared: true
+        filtersActive: true
     },
     methods: {
         addUser: function(e, filter) {
@@ -132,7 +135,7 @@ var vm = new Vue({
             filter.active = true;
             this.userIds.push({ id: filter.id });
         },
-        clearFilter: function(e) {
+        clearUsers: function(e) {
             for (var i in this.filters) {
                 if (this.filters[i].active) {
                     this.filters[i].active = false;
@@ -145,4 +148,3 @@ var vm = new Vue({
     }
 });
 </script>
-
