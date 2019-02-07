@@ -1,0 +1,46 @@
+<style>
+    .bounce-in-enter-active {
+        animation: bounce .2s;
+    }
+
+    .bounce-in-leave-active {
+        animation: bounce .2s reverse;
+    }
+
+    @keyframes bounce {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
+<div id="app">
+    <div @click="show = !show">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- You can also use attributes enter-active-class="" leave-active-class="" for custom classes -->
+    <transition name="bounce-in">
+        <h2 v-if="show">{{ animatedText }}</h2>
+    </transition>
+</div>
+
+<script src="https://unpkg.com/vue"></script>
+<script>
+
+new Vue({
+    el: '#app',
+    data: {
+        title: 'Click me',
+        animatedText: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+        show: true
+    }
+});
+
+</script>
