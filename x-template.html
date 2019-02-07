@@ -1,0 +1,103 @@
+<div id='app'>
+    <button
+        v-for='(filter, key) in filters'
+        :key="key"
+        @click='addUser($event, filter)'
+        :class="{ active : filter.active }"
+    >
+        Toggle user #{{ filter.id }}
+    </button>
+
+    <button @click='clearUsers' :class="{ active : filtersInactive }"> All </button>
+
+    <vue-users-list :ids='userIds'></vue-users-list>
+</div>
+
+<script type='text/x-template' id='vue-user-list-template'>
+    <ul>
+        <li v-for='(user, i) in users' :key='user.id'>
+            <div>{{ user.id }}</div>
+            <div>{{ user.name }}</div>
+        </li>
+    </ul>
+</script>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vue-resource/dist/vue-resource.min.js'></script>
+<script>
+
+Vue.component('vue-users-list', {
+    template: '#vue-user-list-template',
+    props: ['ids'],
+    data: function() {
+        return {
+            users: {},
+        };
+    },
+    created: function() {
+        this.fetchData();
+    },
+    watch: {
+        ids: function(newVal, oldVal) {
+            this.fetchData();
+        }
+    },
+    methods: {
+        fetchData: function() {
+            var encodedParams = '';
+            encodedParams = this.ids.map(function(key) {
+                return 'id=' + key.id;
+            }).join('&');
+
+            this.$http.get('https://jsonplaceholder.typicode.com/users/?' + encodedParams).then(function(response) {
+                this.users = response.body;
+            }, function(error) {
+                console.error(error);
+            });
+        },
+    }
+});
+
+new Vue({
+    el: '#app',
+    data: {
+        userIds: [],
+        filters: [
+            { id: 1, active: false },
+            { id: 2, active: false },
+            { id: 3, active: false },
+            { id: 4, active: false },
+            { id: 5, active: false }
+        ],
+        filtersInactive: true
+    },
+    methods: {
+        addUser: function(e, filter) {
+            this.filtersInactive = false;
+
+            for (var i in this.userIds) {
+                if (filter.id === this.userIds[i].id) {
+                    filter.active = false;
+                    this.userIds.splice(i, 1);
+
+                    return false;
+                }
+            }
+
+            filter.active = true;
+            this.userIds.push({ id: filter.id });
+        },
+        clearUsers: function() {
+            for (var i in this.filters) {
+                if (this.filters[i].active) {
+                    this.filters[i].active = false;
+                }
+            }
+
+            this.filtersInactive = true;
+            this.userIds = [];
+        }
+    }
+});
+
+</script>
