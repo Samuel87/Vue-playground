@@ -1,0 +1,29 @@
+<div id='app'>
+    <h1>{{ message | uppercase }}</h1>
+    <h1>{{ message | capitalize }}</h1>
+
+    <div :id="'myDiv' | capitalize"></div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script>
+// Filters can be used in mustache interpolations and v-bind expressions
+
+// Global filter
+Vue.filter('uppercase', function(value) {
+    return value.toUpperCase();
+});
+
+new Vue({
+    el: '#app',
+    data: {
+        message: 'hello'
+    },
+    filters: { // Local filter
+        capitalize: function(value) {
+            return value.toString().charAt(0).toUpperCase() + value.slice(1);
+        }
+    }
+});
+
+</script>
