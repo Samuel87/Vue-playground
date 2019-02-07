@@ -10,7 +10,7 @@ Vue.component('vue-button', {
     // props: ['title'],
     props: { // Some prop definitions should be as detailed as possible
         title: {
-            type: String,
+            type: String, // Number, Boolean, Array, Object, Date, Function, Symbol
             required: true,
             validator: function(value) {
                 return [
