@@ -15,7 +15,7 @@
             @click='addUser($event, filter)'
             :class="{ active : filter.active }"
         >
-        Filter user #{{ filter.id }}</button>
+        Toggle user #{{ filter.id }}</button>
 
         <button
             @click='clearUsers'
@@ -147,4 +147,5 @@ var vm = new Vue({
         }
     }
 });
+
 </script>

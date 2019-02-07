@@ -1,0 +1,74 @@
+<div id="app">
+    <h1>{{ welcome }}</h1>
+    <h2>{{ message }}</h2>
+    <h3>{{ count }}</h3>
+    <h4>{{ selectedItem }}</h4>
+    <button @click="incrementCount">Increment Count</button>
+</div>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vuex"></script>
+<script>
+
+const store = new Vuex.Store({
+    state: {
+        message: 'Hello from Vuex',
+        count: 0,
+        items: [
+            { id: 1, name: 'merrari' },
+            { id: 2, name: 'mezda' },
+        ]
+    },
+    mutations: { // Synchronous
+        INCREMENT_COUNTER(state, payload) {
+            state.count += payload;
+        }
+    },
+    actions: { // Aynchronous
+        increment(state, payload) {
+            // Commit Vuex mutation 'INCREMENT_COUNTER'
+            state.commit('INCREMENT_COUNTER', payload);
+        }
+    },
+    getters: {
+        message(state) {
+            return state.message.toUpperCase();
+        },
+        counter(state) {
+            return state.count;
+        },
+        getItemById: (state) => (id) => {
+            return state.items.find(item => item.id === id);
+        }
+    }
+});
+
+new Vue({
+    el: '#app',
+    store, // This will inject the store instance to all child components
+    data: {
+        welcome: 'Hello from Vue'
+    },
+    computed: {
+        message() {
+            return store.getters.message;
+        },
+        count() {
+            return store.getters.counter;
+        },
+        selectedItem() {
+            const itemId = 2;
+            const item = store.getters.getItemById(itemId);
+            return item.name;
+        }
+    },
+    methods: {
+        incrementCount() {
+            // Dispatch Vuex action 'increment'
+            // Access store from child components with this.$store
+            store.dispatch('increment', 10);
+        }
+    }
+});
+
+</script>
