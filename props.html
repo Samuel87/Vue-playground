@@ -1,0 +1,17 @@
+<div id='app'>
+    <vue-button title='Submit'></vue-button>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script>
+
+Vue.component('vue-button', {
+    template: '<button>{{ title }}</button>',
+    props: ['title'],
+});
+
+new Vue({
+    el: '#app',
+});
+
+</script>

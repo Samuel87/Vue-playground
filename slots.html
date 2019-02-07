@@ -1,0 +1,32 @@
+<div id='app'>
+    <vue-button>
+        <template v-slot:title>
+            <span>Submit</span>
+        </template>
+        <template v-slot:subtext>
+            <span>send you data</span>
+        </template>
+    </vue-button>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script>
+
+// Slot names should be used for multiple slots
+// Templates can have default content and will be overridden
+Vue.component('vue-button', {
+    template: `
+        <div class="button-wrapper">
+            <button type="button">
+                <slot name="title">Send</slot>
+            </button>
+            <slot name="subtext"></slot>
+        </div>
+    `,
+});
+
+new Vue({
+    el: '#app',
+});
+
+</script>
