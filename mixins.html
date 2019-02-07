@@ -1,0 +1,45 @@
+<div id="app">
+</div>
+
+<script src="https://unpkg.com/vue"></script>
+<script>
+
+// Global mixin
+Vue.mixin({
+    created() {
+        /**/
+    }
+});
+
+const windowResize = {
+    data() {
+        return {
+            window: {
+                width: 0,
+                height: 0
+            }
+        };
+    },
+    created() {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
+    },
+    methods: {
+        handleResize() {
+            this.window.width = window.innerWidth;
+            this.window.height = window.innerHeight;
+
+            console.log(this.window.width, this.window.height);
+        }
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize);
+    },
+};
+
+new Vue({
+    el: '#app',
+    mixins: [windowResize],
+});
+
+</script>
