@@ -7,7 +7,21 @@
 
 Vue.component('vue-button', {
     template: '<button>{{ title }}</button>',
-    props: ['title'],
+    // props: ['title'],
+    props: { // Some prop definitions should be as detailed as possible
+        title: {
+            type: String,
+            required: true,
+            validator: function(value) {
+                return [
+                    'Submit',
+                    'Send',
+                    'Cancel',
+                    'error'
+                ].indexOf(value) !== -1;
+            }
+        }
+    }
 });
 
 new Vue({
