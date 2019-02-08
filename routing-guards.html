@@ -1,0 +1,98 @@
+<div id="app">
+    <router-link to="/user">Home</router-link>
+    <router-link to="/user/profile">Profile</router-link>
+
+    <!-- This is where the linked component will be rendered -->
+    <router-view></router-view>
+</div>
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+// If using a module system (e.g. via vue-cli), import Vue and VueRouter
+// and then call `Vue.use(VueRouter)`.
+
+const User = {
+    template: `
+        <div>
+            Userpage
+            <router-view></router-view>
+        </div>
+    `,
+    // IN COMPONENT GUARDS
+    beforeRouteEnter (to, from, next) {
+        // called before the route that renders this component is confirmed.
+        // does NOT have access to `this` component instance,
+        // because it has not been created yet when this guard is called!
+        next();
+    },
+    beforeRouteUpdate (to, from, next) {
+        // called when the route that renders this component has changed,
+        // but this component is reused in the new route.
+        // For example, for a route with dynamic params `/foo/:id`, when we
+        // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
+        // will be reused, and this hook will be called when that happens.
+        // has access to `this` component instance.
+        next();
+    },
+    beforeRouteLeave (to, from, next) {
+        // called when the route that renders this component is about to
+        // be navigated away from.
+        // has access to `this` component instance.
+    }
+};
+
+const Profile = { template: '<div>I am a guarded subpag that required auth</div>' };
+
+const routes = [
+    {
+        path: '/user',
+        component: User,
+        // PER ROUTE GUARD
+        beforeEnter: (to, from, next) => {
+            next()
+        },
+        children: [
+            {
+                path: 'profile',
+                component: Profile,
+                meta: {
+                    requiresAuth: false // a meta field
+                }
+            }
+        ]
+    },
+];
+
+const router = new VueRouter({
+    routes,
+});
+
+const app = new Vue({
+    data: {
+        auth: {
+            loggedIn: false
+        }
+    },
+    router
+}).$mount('#app');
+
+// GLOBAL GUARDS
+// An example of checking for a meta field in the global navigation guard
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!app.auth.loggedIn) {
+            next({
+                // Redirect to user with the path in the query that it redirected from
+                path: '/user',
+                query: { redirect: to.fullPath }
+            });
+        } else {
+            next();
+        }
+    } else {
+        next(); // Always call next()!
+    }
+});
+
+</script>
