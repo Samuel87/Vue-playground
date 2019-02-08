@@ -63,7 +63,8 @@ module.exports = {
 
     "globals": {
         "Vue": true,
-        "Vuex": true
+        "Vuex": true,
+        "VueRouter": true
     },
 
 
