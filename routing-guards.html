@@ -21,13 +21,13 @@ const User = {
         </div>
     `,
     // IN COMPONENT GUARDS
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
         // called before the route that renders this component is confirmed.
         // does NOT have access to `this` component instance,
         // because it has not been created yet when this guard is called!
         next();
     },
-    beforeRouteUpdate (to, from, next) {
+    beforeRouteUpdate(to, from, next) {
         // called when the route that renders this component has changed,
         // but this component is reused in the new route.
         // For example, for a route with dynamic params `/foo/:id`, when we
@@ -36,7 +36,7 @@ const User = {
         // has access to `this` component instance.
         next();
     },
-    beforeRouteLeave (to, from, next) {
+    beforeRouteLeave(to, from, next) {
         // called when the route that renders this component is about to
         // be navigated away from.
         // has access to `this` component instance.
@@ -51,7 +51,7 @@ const routes = [
         component: User,
         // PER ROUTE GUARD
         beforeEnter: (to, from, next) => {
-            next()
+            next();
         },
         children: [
             {
