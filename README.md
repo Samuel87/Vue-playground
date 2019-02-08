@@ -1,6 +1,6 @@
 # Vue Examples
 
-#### helpful links & docs:
+#### Helpful links & docs:
 [The Docs](https://vuejs.org/v2/guide/)
 
 [API Docs](https://vuejs.org/v2/api/)
