@@ -1,0 +1,38 @@
+<div id="app">
+    <router-link to="/home">Home</router-link>
+    <router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
+
+    <!-- This is where the linked component will be rendered -->
+    <router-view></router-view>
+</div>
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+// If using a module system (e.g. via vue-cli), import Vue and VueRouter
+// and then call `Vue.use(VueRouter)`.
+
+const Home = { template: '<div>Home</div>' };
+const User = { template: '<div>User {{ $route.params.userId }}</div>' };
+
+const routes = [
+    {
+        path: '/home',
+        component: Home,
+    },
+    {
+        name: 'user',
+        path: '/user/:userId',
+        component: User
+    }
+];
+
+const router = new VueRouter({
+    routes,
+});
+
+new Vue({
+    router
+}).$mount('#app');
+
+</script>

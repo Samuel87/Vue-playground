@@ -1,0 +1,51 @@
+<div id="app">
+    <div class="user">
+        <router-link to="/user/foo">Profile</router-link>
+        <router-link to="/user/foo/settings">Settings</router-link>
+
+        <router-view></router-view>
+    </div>
+</div>
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+
+const User = {
+    props: ['id'],
+    template: `
+        <div class="user">
+            <h2>User {{ id }}</h2>
+            <router-view></router-view>
+        </div>`
+};
+
+const UserProfile = { template: '<div>Profile</div>' };
+const UserSettings = { template: '<div>Settings</div>' };
+
+const router = new VueRouter({
+    routes: [
+        {
+            path: '/user/:id', component: User,
+            props: true, // the route.params will be set as the component props
+            children: [
+                // UserProfile will be rendered inside User's <router-view>
+                // when /user/:id is matched
+                { path: '', component: UserProfile },
+
+                // UserProfile will be rendered inside User's <router-view>
+                // when /user/:id/settings is matched
+                { path: 'settings', component: UserSettings }
+            ]
+        }
+    ]
+});
+
+new Vue({
+    data: {
+        userName: 'foo'
+    },
+    router
+}).$mount('#app');
+
+</script>
