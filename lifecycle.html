@@ -1,0 +1,53 @@
+<div id='app'></div>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script>
+
+new Vue({
+    el: '#app',
+    data: {
+        message: 'hello'
+    },
+    beforeCreate() {
+        /*
+            Data has not been made reactive, events have not been set up yet.
+            Both creation hooks are also run during server-side rendering.
+        */
+    },
+    created() {
+        /*
+            Data is reactive and events are active.
+            Templates and Virtual DOM have not yet been mounted or rendered.
+            Use this to fetch data for the component.
+        */
+    },
+    mounted() {
+        /*
+            Full access to the reactive component, templates, and rendered DOM (via. this.$el).
+            Mounted is the most-often used lifecycle hook. The most frequently used patterns are
+            fetching data for your component (use created for this instead,) and modifying the DOM,
+            often to integrate non-Vue libraries.
+        */
+    },
+    updated() {
+        /*
+            The updated hook runs after data changes on your component and the DOM re-renders.
+            If you need to access the DOM after a property change, this is where to do it.
+        */
+    },
+    beforeDestroy() {
+        /*
+            Fired right before teardown. Your component will still be fully present and functional.
+            If you need to cleanup events or reactive subscriptions (to prevent memory leaks), do it here.
+        */
+    },
+    destroyed() {
+        /*
+            By the time you reach the destroyed hook, everything that was attached to it has been destroyed.
+            You might use the destroyed hook to do any last-minute cleanup or inform a remote server that
+            the component was destroyed.
+        */
+    }
+});
+
+</script>

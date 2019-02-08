@@ -267,7 +267,7 @@ module.exports = {
         "keyword-spacing": 1,                   // enforce consistent spacing before and after keywords
         "line-comment-position": 0,             // enforce position of line comments
         "linebreak-style": 1,                   // enforce consistent linebreak style
-        "lines-around-comment": 1,              // require empty lines around comments
+        "lines-around-comment": 0,              // require empty lines around comments
         "lines-between-class-members": 1,       // require or disallow an empty line between class members
         "max-depth": 1,                         // enforce a maximum depth that blocks can be nested
         "max-len": 0,                           // enforce a maximum line length
