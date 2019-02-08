@@ -1,0 +1,51 @@
+<div id='app'>
+    <div class='cart'>
+        Cart({{ cart.length }})
+        {{ cart }}
+    </div>
+
+    <products @add-to-cart='updateCart'></product>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script>
+
+Vue.component('products', {
+    data() {
+        return {
+            items: [
+                { id: 1, name: 'Red Socks' },
+                { id: 2, name: 'Green Socks' }
+            ],
+        };
+    },
+    template: `
+        <ul>
+            <li class='product' v-for='(item, index) in items' :key='index'>
+                {{ item.name }}
+                <button @click='addToCart(item)'>Add to cart</button>
+            </li>
+        </ul>
+    `,
+    methods: {
+        addToCart(item) {
+            // Emit event to parent component
+            this.$emit('add-to-cart', item);
+        }
+    }
+});
+
+new Vue({
+    el: '#app',
+    data: {
+        cart: [],
+        cartTotal: 0
+    },
+    methods: {
+        updateCart(item) {
+            this.cart.push(item);
+        }
+    }
+});
+
+</script>
