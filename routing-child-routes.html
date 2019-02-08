@@ -1,8 +1,7 @@
 <div id="app">
     <div class="user">
-        <!-- How to make foo dyamic -->
-        <router-link to="/user/foo">Profile</router-link>
-        <router-link to="/user/foo/settings">Settings</router-link>
+        <router-link :to="{ name: 'userProfile', params: { id: 3 } }">Profile</router-link>
+        <router-link :to="{ name: 'userSettings', params: { id: 3 } }">Settings</router-link>
 
         <router-view></router-view>
     </div>
@@ -18,7 +17,8 @@ const User = {
         <div class="user">
             <h2>User {{ id }}</h2>
             <router-view></router-view>
-        </div>`
+        </div>
+    `
 };
 
 const UserProfile = { template: '<div>Profile</div>' };
@@ -32,11 +32,19 @@ const router = new VueRouter({
             children: [
                 // UserProfile will be rendered inside User's <router-view>
                 // when /user/:id is matched
-                { path: '', component: UserProfile },
+                {
+                    name: 'userProfile',
+                    path: '',
+                    component: UserProfile
+                },
 
                 // UserProfile will be rendered inside User's <router-view>
                 // when /user/:id/settings is matched
-                { path: 'settings', component: UserSettings }
+                {
+                    name: 'userSettings',
+                    path: 'settings',
+                    component: UserSettings
+                }
             ]
         }
     ]

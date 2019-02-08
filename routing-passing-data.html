@@ -35,6 +35,10 @@ const User = {
         if (this.$route.query.message) {
             this.message = this.$route.query.message;
         }
+    },
+    beforeRouteUpdate(to, from, next) {
+        // react to route changes params changes
+        // don't forget to call next()
     }
 };
 
