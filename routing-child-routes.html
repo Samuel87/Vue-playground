@@ -1,5 +1,6 @@
 <div id="app">
     <div class="user">
+        <!-- How to make foo dyamic -->
         <router-link to="/user/foo">Profile</router-link>
         <router-link to="/user/foo/settings">Settings</router-link>
 
@@ -42,9 +43,6 @@ const router = new VueRouter({
 });
 
 new Vue({
-    data: {
-        userName: 'foo'
-    },
     router
 }).$mount('#app');
 

@@ -1,0 +1,61 @@
+<div id="app">
+    <div class="user">
+        <router-link to="/Home">Home</router-link>
+        <router-link
+            :to="{ name: 'user', params: { userId: 2 }, query: { message: 'hello' }}"
+        >
+            User
+        </router-link>
+
+        <router-view></router-view>
+    </div>
+</div>
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script>
+
+const Home = { template: '<div>Home</div>' };
+const User = {
+    data() {
+        return {
+            id: 0,
+            message: 'No message'
+        };
+    },
+    template: `
+        <div class="user">
+            {{ message }}
+            User {{ id }}
+        </div>
+    `,
+    created() {
+        this.id = this.$route.params.userId;
+
+        if (this.$route.query.message) {
+            this.message = this.$route.query.message;
+        }
+    }
+};
+
+const routes = [
+    {
+        path: '/home',
+        component: Home,
+    },
+    {
+        name: 'user',
+        path: '/user/:userId',
+        component: User
+    }
+];
+
+const router = new VueRouter({
+    routes
+});
+
+new Vue({
+    router
+}).$mount('#app');
+
+</script>

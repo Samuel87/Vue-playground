@@ -1,6 +1,6 @@
 <div id="app">
     <router-link to="/home">Home</router-link>
-    <router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
+    <router-link :to="{ name: 'user', params: { userId: 123 } }">User</router-link>
 
     <!-- This is where the linked component will be rendered -->
     <router-view></router-view>
@@ -12,7 +12,21 @@
 // If using a module system (e.g. via vue-cli), import Vue and VueRouter
 // and then call `Vue.use(VueRouter)`.
 
-const Home = { template: '<div>Home</div>' };
+const Home = {
+    template: `
+        <div>
+            Home
+            <button @click="goToRecommendedUser">Recommended User</button>
+        </div>
+    `,
+    methods: {
+        goToRecommendedUser() {
+            // Programmatic Navigation
+            this.$router.push({ name: 'user', params: { userId: 124 } });
+        }
+    }
+};
+
 const User = { template: '<div>User {{ $route.params.userId }}</div>' };
 
 const routes = [
@@ -29,6 +43,8 @@ const routes = [
 
 const router = new VueRouter({
     routes,
+    linkActiveClass: 'active', // Optional
+    linkExactActiveClass: 'active-current' // Optional
 });
 
 new Vue({
