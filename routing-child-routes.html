@@ -1,20 +1,20 @@
-<div id="app">
-    <div class="user">
-        <router-link :to="{ name: 'userProfile', params: { id: 3 } }">Profile</router-link>
-        <router-link :to="{ name: 'userSettings', params: { id: 3 } }">Settings</router-link>
+<div id='app'>
+    <div class='user'>
+        <router-link :to='{ name: "userProfile", params: { id: 3 } }'>Profile</router-link>
+        <router-link :to='{ name: "userSettings", params: { id: 3 } }'>Settings</router-link>
 
         <router-view></router-view>
     </div>
 </div>
 
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src='https://unpkg.com/vue/dist/vue.js'></script>
+<script src='https://unpkg.com/vue-router/dist/vue-router.js'></script>
 <script>
 
 const User = {
     props: ['id'],
     template: `
-        <div class="user">
+        <div class='user'>
             <h2>User {{ id }}</h2>
             <router-view></router-view>
         </div>

@@ -1,14 +1,14 @@
 <div id='app'>
     <button
         v-for='(filter, key) in filters'
-        :key="key"
+        :key='key'
         @click='addUser($event, filter)'
-        :class="{ active : filter.active }"
+        :class='{ active : filter.active }'
     >
         Toggle user #{{ filter.id }}
     </button>
 
-    <button @click='clearUsers' :class="{ active : filtersInactive }"> All </button>
+    <button @click='clearUsers' :class='{ active : filtersInactive }'> All </button>
 
     <vue-users-list :ids='userIds'></vue-users-list>
 </div>
