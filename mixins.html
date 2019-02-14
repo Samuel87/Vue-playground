@@ -7,7 +7,7 @@
 // Global mixin
 Vue.mixin({
     created() {
-        /**/
+        console.log('im called first');
     }
 });
 
@@ -21,6 +21,8 @@ const windowResize = {
         };
     },
     created() {
+        console.log('Im called second');
+
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
     },
