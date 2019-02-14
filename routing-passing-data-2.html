@@ -1,0 +1,74 @@
+<div id='app'>
+    <div class='user'>
+        <router-link :to='{ name: "home" }'>
+            Home
+        </router-link>
+        <router-link :to='{ name: "user", params: { toolbar: true, title: "eyy" } }'>
+            User
+        </router-link>
+
+        <router-view name="header"></router-view>
+        <router-view name="content"></router-view>
+    </div>
+</div>
+
+<script src='https://unpkg.com/vue/dist/vue.js'></script>
+<script src='https://unpkg.com/vue-router/dist/vue-router.js'></script>
+<script>
+
+const Home = { template: '<div>Home</div>' };
+const User = { template: '<div>User page</div>' };
+const Header = {
+    props: {
+        toolbar: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        title: {
+            type: String,
+            required: false,
+            default: 'default title'
+        }
+    },
+    template: `
+        <div>
+            <h1>{{ title }}</h1>
+            <div v-if="toolbar">I'm a toolbar</div>
+        </div>
+    `,
+    created() {
+        console.log(this.$route.params);
+    }
+};
+
+const routes = [
+    {
+        name: 'home',
+        path: '/home',
+        component: Home,
+    },
+    {
+        name: 'user',
+        path: '/user',
+        components: {
+            // render to named router-views
+            content: User,
+            header: Header
+        },
+        // params will be treated as props in header
+        props: {
+            header: true
+        }
+    }
+];
+
+const router = new VueRouter({
+    routes
+});
+
+new Vue({
+    router
+}).$mount('#app');
+
+</script>
