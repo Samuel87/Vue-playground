@@ -1,0 +1,27 @@
+<div id='app'>
+    <div>
+        <input v-model="options" type="checkbox"  value="option-1">
+        <input v-model="options" type="checkbox"  value="option-2">
+        <input v-model="options" type="checkbox"  value="option-3">
+    </div>
+    <div>
+        You selected {{ selectedOptions }}
+    </div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script>
+
+new Vue({
+    el: '#app',
+    data: {
+        options: []
+    },
+    computed: {
+        selectedOptions: function() {
+            return this.options.join(', ');
+        }
+    }
+});
+
+</script>

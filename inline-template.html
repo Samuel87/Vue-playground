@@ -1,0 +1,27 @@
+<div id='app'>
+    <user-list inline-template>
+        <ul>
+            <li v-for='(user, index) in users' :key='index'>{{ user.name }}</li>
+        </ul>
+    </user-list>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script>
+
+Vue.component('user-list', {
+    data: function() {
+        return {
+            users: [
+                { id: 1, name: 'Sam' },
+                { id: 3, name: 'Sung' }
+            ],
+        };
+    },
+});
+
+new Vue({
+    el: '#app',
+});
+
+</script>
