@@ -1,6 +1,5 @@
-# Basic file structure for bigger projects
+# File structure example for Vue.js projects
 Use only what you need; You can eventually add other folders depending on your need, such as /services, /constants, etc.
-
 
     .
     ├── public
@@ -64,7 +63,7 @@ Use only what you need; You can eventually add other folders depending on your n
 * Child components should include their parent name as a prefix. For example if you would like a “Photo” component used in the “UserCard” you will name it “UserCardPhoto”. It’s for better readability since files in a folder are usually order alphabetically.
 * Always use full name instead of abbreviation in the name of your components. For example don’t use “UDSettings”, use instead “UserDashboardSettings”.
 
-## Links to examples
+## Examples and references
 
 [Structure a Vue app](https://itnext.io/how-to-structure-a-vue-js-project-29e4ddc1aeeb)
 
