@@ -1,6 +1,13 @@
 # Vue Examples
 
-#### Helpful links & docs:
+## Getting Started with a new project
+
+Install vue cli `npm install -g @vue/cli`
+
+Open vue gui to start project `vue ui`
+
+
+## Helpful links & docs:
 [The Docs](https://vuejs.org/v2/guide/)
 
 [API Docs](https://vuejs.org/v2/api/)
