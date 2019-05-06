@@ -1,0 +1,114 @@
+<div id="app">
+    <div>Cache: {{ cachedComponents }}</div>
+
+    <keep-alive :include="cachedComponents">
+        <router-view @component-cache-update="toggleComponentInCache"></router-view>
+    </keep-alive>
+</div>
+
+<script src='https://unpkg.com/vue/dist/vue.js'></script>
+<script src='https://unpkg.com/vue-router/dist/vue-router.js'></script>
+<script>
+
+const Home = {
+    name: 'home',
+    data() {
+        return {
+            token: Math.random()
+        };
+    },
+    template: `
+        <div>
+            <div><router-link :to='{ name: "user" }'>User</router-link></div>
+
+            <button @click="$emit('component-cache-update', 'list')">Toggle List Caching</button>
+
+            <div>{{ token }}</div>
+        </div>
+    `,
+    activated() {
+        console.log('home:activated');
+    },
+    created() {
+        console.log('home:created');
+    }
+};
+
+const User = {
+    name: 'user',
+    data() {
+        return {
+            token: Math.random()
+        };
+    },
+    template: `
+        <div>
+            <div><router-link :to='{ name: "home" }'>Back</router-link></div>
+            <div><router-link :to='{ name: "list" }'>List</router-link></div>
+
+            <button @click="$emit('component-cache-update', 'list')">Toggle List Caching</button>
+
+            <div>{{ token }}</div>
+        </div>
+    `,
+    activated() {
+        console.log('user:activated');
+    },
+    created() {
+        console.log('user:created');
+    }
+};
+
+const List = {
+    name: 'list',
+    data() {
+        return {
+            token: Math.random()
+        };
+    },
+    template: `
+        <div>
+            <div><router-link :to='{ name: "user" }'>Back</router-link></div>
+
+            <div>{{ token }}</div>
+        </div>
+    `,
+    activated() {
+        console.log('list:activated');
+    },
+    created() {
+        console.log('list:created');
+    }
+};
+
+
+const routes = [
+    { name: 'home', path: '/', component: Home },
+    { name: 'user', path: '/user', component: User },
+    { name: 'list', path: '/list', component: List }
+];
+
+const router = new VueRouter({
+    routes
+});
+
+new Vue({
+    el: '#app',
+    router,
+    data() {
+        return {
+            cachedComponents: []
+        };
+    },
+    methods: {
+        toggleComponentInCache(component) {
+            if (this.cachedComponents.includes(component)) {
+                this.cachedComponents = this.cachedComponents.filter(item => item !== component);
+            } else {
+                this.cachedComponents.push(component);
+            }
+        }
+    }
+});
+
+</script>
