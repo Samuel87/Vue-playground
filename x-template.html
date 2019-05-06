@@ -1,29 +1,29 @@
-<div id='app'>
+<div id="app">
     <button
-        v-for='(filter, key) in filters'
-        :key='key'
-        @click='addUser($event, filter)'
-        :class='{ active : filter.active }'
+        v-for="(filter, key) in filters"
+        :key="key"
+        @click="addUser($event, filter)"
+        :class="{ active : filter.active }"
     >
         Toggle user #{{ filter.id }}
     </button>
 
-    <button @click='clearUsers' :class='{ active : filtersInactive }'> All </button>
+    <button @click="clearUsers" :class="{ active : filtersInactive }"> All </button>
 
-    <vue-users-list :ids='userIds'></vue-users-list>
+    <vue-users-list :ids="userIds"></vue-users-list>
 </div>
 
-<script type='text/x-template' id='vue-user-list-template'>
+<script type="text/x-template" id="vue-user-list-template">
     <ul>
-        <li v-for='(user, i) in users' :key='user.id'>
+        <li v-for="(user, i) in users" :key="user.id">
             <div>{{ user.id }}</div>
             <div>{{ user.name }}</div>
         </li>
     </ul>
 </script>
 
-<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/vue-resource/dist/vue-resource.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource/dist/vue-resource.min.js"></script>
 <script>
 
 Vue.component('vue-users-list', {

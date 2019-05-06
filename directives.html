@@ -4,7 +4,7 @@
     }
 </style>
 
-<div id='app'>
+<div id="app">
 
     <!-- v-for -->
     <ol>
@@ -12,7 +12,7 @@
     </ol>
 
     <!--  v-if & v-show -->
-    <div v-show="show">I'm shown</div>
+    <div v-show="show">I"m shown</div>
     <span v-if="show" :title="text">😁</span>
     <span v-else-if="show === null" :title="text">Null</span>
     <span v-else>😞</span>
@@ -37,7 +37,7 @@
     <input placeholder="Enter to submit" @keyup.enter="updateText">
 
     <!-- attribute binding -->
-    <div :class="{ block: !show }">I'm a block</div>
+    <div :class="{ block: !show }">I"m a block</div>
 
     <!-- v-cloak -->
     <div v-cloak>
@@ -52,7 +52,7 @@
     <!-- Dynamic Components with v-is -->
     <button
         v-for="tab in tabs" :key="tab.name"
-        :class="['tab-button', { active: currentTab.name === tab.name }]"
+        :class="[ 'tab-button', { active: currentTab.name === tab.name } ]"
         @click="currentTab = tab"
     >
         {{ tab.name }}
@@ -61,7 +61,7 @@
 
 </div>
 
-<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
 <script>
 
 var tabs = [

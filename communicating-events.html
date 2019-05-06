@@ -1,13 +1,13 @@
-<div id='app'>
-    <div class='cart'>
+<div id="app">
+    <div class="cart">
         Cart({{ cart.length }})
         {{ cart }}
     </div>
 
-    <products @add-to-cart='updateCart'></product>
+    <products @add-to-cart="updateCart"></product>
 </div>
 
-<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
 <script>
 
 Vue.component('products', {
@@ -21,9 +21,9 @@ Vue.component('products', {
     },
     template: `
         <ul>
-            <li class='product' v-for='(item, index) in items' :key='index'>
+            <li class="product" v-for="(item, index) in items" :key="index">
                 {{ item.name }}
-                <button @click='addToCart(item)'>Add to cart</button>
+                <button @click="addToCart(item)">Add to cart</button>
             </li>
         </ul>
     `,

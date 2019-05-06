@@ -20,18 +20,18 @@
     }
 </style>
 
-<div id='app'>
-    <div @click='show = !show'>
+<div id="app">
+    <div @click="show = !show">
         <h1>{{ title }}</h1>
     </div>
 
-    <!-- You can also use attributes enter-active-class=' leave-active-class=' for custom classes -->
-    <transition name='bounce-in'>
-        <h2 v-if='show'>{{ animatedText }}</h2>
+    <!-- You can also use attributes enter-active-class=" leave-active-class=" for custom classes -->
+    <transition name="bounce-in">
+        <h2 v-if="show">{{ animatedText }}</h2>
     </transition>
 </div>
 
-<script src='https://unpkg.com/vue'></script>
+<script src="https://unpkg.com/vue"></script>
 <script>
 
 new Vue({
