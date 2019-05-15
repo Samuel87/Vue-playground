@@ -1,0 +1,75 @@
+<div id="app">
+    <input-text
+        placeholder="Write your message"
+        name="input-text"
+        label="Message"
+        required
+        :type="number"
+        :error="message === ''"
+        v-model="message"
+    ></input-text>
+
+    {{ message }}
+</div>
+
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
+<script>
+
+const inputText = {
+    template: `
+        <label class="input-text" :class="{ error: error }">
+            <span v-if="label" class="input-label" v-text="inputLabel">
+                <template v-if="required">*</template>
+            </span>
+
+            <input
+                class="input-text-field"
+                v-bind="$attrs"
+                :type="type"
+                :value="model"
+                @input="$emit('input', $event.target.value)"
+            >
+        </label>
+    `,
+    inheritAttrs: false,
+    model: {
+        prop: 'model',
+        event: 'input',
+    },
+    props: {
+        model: {
+            type: [String, Array, Boolean, Number],
+            default: null,
+        },
+        type: {
+            type: String,
+            default: 'text',
+        },
+        label: String,
+        required: {
+            type: Boolean,
+            default: false,
+        },
+        error: {
+            type: Boolean,
+            default: false,
+        }
+    },
+    computed: {
+        inputLabel() {
+            return this.required ? this.label + '*' : this.label;
+        },
+    },
+};
+
+new Vue({
+    el: '#app',
+    data: {
+        message: '',
+    },
+    components: {
+        inputText,
+    },
+});
+
+</script>

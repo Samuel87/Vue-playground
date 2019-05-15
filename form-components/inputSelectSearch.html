@@ -1,0 +1,252 @@
+<div id="app">
+    {{ selected }}
+
+    <input-select-search
+        :options="options"
+        :selected-option="selected"
+        placeholder="Select your country"
+        v-model="selected"
+    >
+    </input-select-search>
+</div>
+
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
+<script>
+
+const inputSelectSearch = {
+    template: `
+        <div class="input-select"
+             :class="{
+                'active': isOpen,
+                'error': error,
+                'disabled': disabled,
+                'no-value': !hasSelectedOption
+             }"
+             @click="open"
+             @focus="open"
+        >
+            <input ref="input"
+                   class="input-select-search"
+                   autocomplete="off"
+                   tabindex="0"
+                   :name="name"
+                   :value="searchText"
+                   :placeholder="placeholder"
+                   @input="onInput($event)"
+                   @focus.prevent="open"
+                   @keyup.esc="close"
+                   @blur="blurInput"
+                   @keydown.up="prevItem"
+                   @keydown.down="nextItem"
+                   @keyup.enter.prevent="enterItem"
+                   @keydown.delete="deleteTextOrItem"
+            >
+
+            <i :class="{
+                    'input-select-arrow-down': !isOpen,
+                    'input-select-arrow-up': isOpen
+                }"
+            ></i>
+
+            <div v-if="label" class="input-label" v-text="label"></div>
+
+            <div class="input-select-value" v-text="inputText"></div>
+
+            <div ref="menu" @mousedown.prevent tabindex="-1" class="input-select-options" v-show="isOpen">
+                <template v-for="(option, i) in filteredOptions">
+                    <div class="input-select-option"
+                         :class="{ 'selected': option.selected, 'current': pointer === i }"
+                         :key="option + 1"
+                         @click.stop="select(option)"
+                         @mousedown="mousedownItem"
+                         @mouseenter="pointerSet(i)"
+                         v-text="option"
+                    >
+                    </div>
+                </template>
+            </div>
+        </div>
+    `,
+    model: {
+        prop: 'model',
+        event: 'input'
+    },
+    props: {
+        model: {
+            type: String,
+            default: '',
+        },
+        selectedOption: {
+            type: String,
+            default: '',
+        },
+        name: {
+            type: String,
+            default: ''
+        },
+        label: String,
+        error: Boolean,
+        disabled: Boolean,
+        placeholder: {
+            type: String,
+            default: ''
+        },
+        options: Array,
+    },
+    data() {
+        return {
+            isOpen: false,
+            searchText: '',
+            mousedownState: false, // mousedown on option menu
+            pointer: -1,
+        };
+    },
+    watch: {
+        selectedOption(newValue) {
+            if (newValue) {
+                this.pointer = this.filteredOptions.findIndex(option => {
+                    return option === newValue;
+                });
+            } else {
+                this.pointer = -1;
+            }
+        },
+        filteredOptions() {
+            this.pointerAdjust();
+        },
+    },
+    methods: {
+        deleteTextOrItem() {
+            if (!this.searchText && this.selectedOption) {
+                this.select('');
+                this.open();
+            }
+        },
+        open() {
+            this.$refs.input.focus();
+            this.isOpen = true;
+            this.mousedownState = false;
+        },
+        blurInput() {
+            if (!this.mousedownState) {
+                this.close();
+            }
+        },
+        close() {
+            this.isOpen = false;
+            this.$refs.input.blur();
+        },
+        prevItem() {
+            // set pointer
+            const prevIndex = this.pointer - 1;
+            const prevIndexScrollTop = this.$el.offsetHeight * prevIndex;
+
+            if (prevIndex >= 0) {
+                this.pointer = prevIndex;
+            }
+
+            // move scroll
+            this.$refs.menu.scrollTop = prevIndexScrollTop;
+        },
+        nextItem() {
+            // set pointer
+            const nextIndex = this.pointer + 1;
+            const nextIndexScrollTop = this.$el.offsetHeight * nextIndex;
+
+            if (nextIndex <= this.filteredOptions.length - 1) {
+                this.pointer = nextIndex;
+            }
+
+            const currentMenuHeight = this.$refs.menu.offsetHeight;
+            const currentPage = Math.ceil((this.$refs.menu.scrollTop + this.$el.offsetHeight) / currentMenuHeight);
+            const itemPage = Math.ceil(nextIndexScrollTop / currentMenuHeight);
+
+            if (currentPage !== itemPage) {
+                this.$refs.menu.scrollTop = (itemPage - 1) * this.$refs.menu.offsetHeight;
+            }
+        },
+        enterItem() {
+            const currentItem = this.filteredOptions[this.pointer];
+
+            if (currentItem) {
+                this.select(currentItem);
+            }
+        },
+        pointerSet(index) {
+            this.pointer = index;
+        },
+        pointerAdjust() {
+            if (this.pointer >= this.filteredOptions.length - 1) {
+                this.pointer = this.filteredOptions.length ? this.filteredOptions.length - 1 : 0;
+            }
+        },
+        mousedownItem() {
+            this.mousedownState = true;
+        },
+        select(option) {
+            this.searchText = ''; // reset text when select item
+            this.close();
+            this.$emit('input', option);
+        },
+        filterPredicate(text, inputText) {
+            return text.match(this.escapedRegExp(inputText));
+        },
+        escapedRegExp(str) {
+            return new RegExp(str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+        },
+        onInput($event) {
+            this.searchText = $event.target.value;
+        }
+    },
+    computed: {
+        inputText() {
+            if (this.searchText) {
+                return '';
+            } else {
+                let text = this.placeholder;
+
+                if (this.selectedOption) {
+                    text = this.selectedOption;
+                }
+
+                return text;
+            }
+        },
+        filteredOptions() {
+            if (this.searchText) {
+                return this.options.filter((option) => {
+                    try {
+                        return this.filterPredicate(option, this.searchText);
+                    } catch (e) {
+                        return true;
+                    }
+                });
+            } else {
+                return this.options;
+            }
+        },
+        hasSelectedOption() {
+            return this.selectedOption !== '';
+        }
+    }
+};
+
+new Vue({
+    el: '#app',
+    data: {
+        options: [
+            'United States',
+            'Australia',
+            'Estonia',
+            'Greenland',
+            'Germany',
+            'South Africa'
+        ],
+        selected: '',
+    },
+    components: {
+        inputSelectSearch,
+    },
+});
+
+</script>

@@ -1,0 +1,76 @@
+<div id="app">
+    <input-radio
+        label="Yes"
+        name="input-radio"
+        :value="true"
+        v-model="option"
+    ></input-radio>
+
+    <input-radio
+        label="No"
+        name="input-radio"
+        :value="false"
+        v-model="option"
+    ></input-radio>
+
+    {{ option }}
+</div>
+
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
+<script>
+
+const inputRadio = {
+    template: `
+        <label class="input-radio" :class="{ error: error }">
+            <span class="input-radio-label" v-text="label"></span>
+
+            <input
+                v-bind="$attrs"
+                type="radio"
+                :name="name"
+                class="input-radio-field"
+                :value="value"
+                :checked="value === model"
+                @change="$emit('change', value)"
+            >
+
+            <slot></slot>
+        </label>
+    `,
+    model: {
+        prop: 'model',
+        event: 'change',
+    },
+    props: {
+        model: {
+            type: [String, Array, Boolean, Number],
+            default: null,
+        },
+        name: String,
+        value: {
+            type: [String, Boolean],
+            required: true,
+        },
+        label: {
+            type: String,
+            required: true,
+        },
+        error: {
+            type: Boolean,
+            default: false,
+        },
+    },
+};
+
+new Vue({
+    el: '#app',
+    data: {
+        option: false,
+    },
+    components: {
+        inputRadio,
+    },
+});
+
+</script>
+

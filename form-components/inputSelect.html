@@ -1,0 +1,124 @@
+<div id="app">
+    {{ selected }}
+
+    <input-select
+        :options="options"
+        :disabled="false"
+        v-model="selected"
+        label="Select"
+    ></input-select>
+</div>
+
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
+<script>
+
+const inputSelect = {
+    template: `
+        <div class="input-select"
+             :class="{ 'active': isOpen, 'disabled': disabled }"
+             @click="open"
+        >
+            <span v-if="label" class="input-label" v-text="label"></span>
+
+            <span v-if="modelArray" @click.stop="forceClose">X</span>
+
+            <div ref="options" class="input-select-options" v-show="isOpen">
+                <div v-for="(option, i) in options"
+                     :key="i"
+                     class="input-select-option"
+                     :class="{ 'selected': model.includes(option) }"
+                     @click.stop="select(option)"
+                     v-text="option"
+                ></div>
+            </div>
+        </div>
+    `,
+    model: {
+        prop: 'model',
+        event: 'change'
+    },
+    props: {
+        model: {
+            type: [String, Number, Array, Object],
+            default() {
+                return '';
+            }
+        },
+        label: String,
+        disabled: Boolean,
+        options: Array,
+    },
+    data() {
+        return {
+            isOpen: false,
+        };
+    },
+    created() {
+        document.addEventListener('click', this.documentClick);
+    },
+    methods: {
+        open() {
+            if (!this.disabled) {
+                this.isOpen = true;
+            }
+        },
+        close() {
+            if (!this.modelArray) {
+                this.isOpen = false;
+            }
+        },
+        forceClose() {
+            this.isOpen = false;
+        },
+        select(option) {
+            this.close();
+
+            if (this.disabled) {
+                return;
+            };
+
+            let value = this.model;
+
+            if (this.modelArray) {
+                const index = value.indexOf(option);
+
+                if (index === -1) {
+                    value.push(option);
+                } else {
+                    value.splice(index, 1);
+                }
+            } else {
+                value = option;
+            }
+
+            this.$emit('change', value);
+        },
+        documentClick(event) {
+            if (!this.$el.contains(event.target)) {
+                this.isOpen = false;
+            }
+        },
+    },
+    computed: {
+        modelArray() {
+            return Array.isArray(this.model);
+        },
+    },
+    destroyed() {
+        document.removeEventListener('click', this.documentClick);
+    },
+};
+
+new Vue({
+    el: '#app',
+    data: {
+        options: ['Red Shoes', 'Green Shoes', 'Blue Shoes'],
+        selected: ['Red Shoes'], // If array, it is treated as multiselect
+    },
+    components: {
+        inputSelect,
+    },
+});
+
+</script>
+

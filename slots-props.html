@@ -1,7 +1,7 @@
 <div id="app">
     <vue-button>
-        <template v-slot="{ slotMessagePropExample }">
-            <span>{{ slotMessagePropExample }}</span>
+        <template v-slot="scope">
+            <span>{{ scope.slotMessagePropExample }}</span>
         </template>
     </vue-button>
 </div>
@@ -10,12 +10,8 @@
 <script>
 
 Vue.component('vue-button', {
-    template: `
-        <div class="button-wrapper">
-            <slot :slotMessagePropExample="message"></slot>
-        </div>
-    `,
-    data() {
+    template: '<div class="button-wrapper"><slot :slotMessagePropExample="message"></slot></div>',
+    data: function() {
         return {
             message: 'Passed message.'
         };

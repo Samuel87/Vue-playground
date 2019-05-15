@@ -1,0 +1,150 @@
+<div id="app">
+    <input-checkbox
+        value="Green Shoes"
+        label="Green shoes"
+        name="input-text"
+        v-model="options"
+    ></input-checkbox>
+
+    <input-checkbox
+        :value="{ id: 0, type: 'sport', color: 'red' }"
+        label="Red shoes"
+        name="input-text"
+        v-model="options"
+    ></input-checkbox>
+
+    {{ options }}
+</div>
+
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
+<script>
+
+const inputCheckbox = {
+    template: `
+        <label class="input-checkbox pointer">
+            <span class="input-checkbox-label" v-text="label"></span>
+
+            <input
+                v-bind="$attrs"
+                type="checkbox"
+                :required="required"
+                :checked="checkboxState"
+                @change="toggle()"
+            >
+
+            <slot></slot>
+        </label>
+    `,
+    inheritAttrs: false,
+    model: {
+        prop: 'model',
+        event: 'change',
+    },
+    props: {
+        model: {
+            type: [String, Array, Boolean, Number],
+            default: null,
+        },
+        name: String,
+        value: {
+            type: [String, Boolean, Object],
+            required: true,
+        },
+        label: {
+            type: String,
+            required: true,
+        },
+        error: {
+            type: Boolean,
+            default: false,
+        },
+        required: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    watch: {
+        checked(newVal) {
+            if (newVal !== this.checkboxState) {
+                this.toggle();
+            }
+        }
+    },
+    mounted() {
+        if (this.checked && !this.checkboxState) {
+            this.toggle();
+        }
+    },
+    methods: {
+        toggle() {
+            if (this.disabled) {
+                return;
+            };
+
+            let value = this.model;
+
+            if (Array.isArray(value)) {
+                if (this.isObject(this.value)) {
+                    // An object value must have a unique id
+                    const matchedIndex = this.findObjectIndexById(value, this.value);
+
+                    if (matchedIndex === -1) {
+                        value.push(this.value);
+                    } else {
+                        value.splice(matchedIndex, 1);
+                    }
+                } else {
+                    value = value.slice();
+                    const i = value.indexOf(this.value);
+
+                    if (i === -1) {
+                        value.push(this.value);
+                    } else {
+                        value.splice(i, 1);
+                    }
+                }
+            } else {
+                value = !this.checkboxState;
+            }
+
+            this.$emit('change', value);
+        },
+        findObjectIndexById(list, obj) {
+            return list.map(function(obj) {
+                return obj.id;
+            }).indexOf(obj.id);
+        },
+        isObject(obj) {
+            return obj !== null && typeof obj === 'object';
+        },
+    },
+    computed: {
+        checkboxState() {
+            if (this.model === null) {
+                return this.checked;
+            }
+
+            if (Array.isArray(this.model)) {
+                if (this.isObject(this.value)) {
+                    return !this.findObjectIndexById(this.model, this.value);
+                }
+
+                return this.model.indexOf(this.value) !== -1;
+            }
+
+            return this.model;
+        },
+    },
+};
+
+new Vue({
+    el: '#app',
+    data: {
+        options: ['Green Shoes'],
+    },
+    components: {
+        inputCheckbox,
+    },
+});
+
+</script>
