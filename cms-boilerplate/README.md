@@ -2,7 +2,7 @@
 
 **Note**: this is only meant to enchance regular multi page sites and not intended
 for building big applications or a Vue.js specific app. For single page apps use
-[Vue CLI](https://cli.vuejs.org/)
+[Vue CLI](https://cli.vuejs.org/).
 
 This boilerplate for Vue.js does not compile traditional templates. If the component is
 small and accepts props for any text content, then it's best the template be defined
