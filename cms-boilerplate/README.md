@@ -22,6 +22,44 @@ The aforementioned also counts for CSS libraries.
 
 The boilerplate is bare-bones - anything project specific can be added and organised incrementally.
 
+File structure example:
+```
+    .
+    ├── CMS stuff                          # libraries and framework here
+    │   └── ...
+    └── src/
+        ├── assets/                        # fonts, icons, images...
+        │   └── ...
+        ├── style/                         # scss
+        │   └── ...
+        └── app/
+            ├── components/
+            │   ├── forms/                 # domain components example
+            │   │   ├── inputText.js
+            │   │   ├── inputCheckbox.js
+            │   │   └── ...
+            │   ├── layout/                # components used only once
+            │   │   ├── AppHeader.js
+            │   │   └── AppMenu.js
+            │   │   └── ...
+            │   ├── AppModal.js
+            │   └── ...
+            ├── pages/                     # a Vue instance for every page
+            |   ├── HomePage.js
+            |   ├── ProductPage/
+            |   |   ├── index.js           # so we can import ProductPage directly
+            |   |   ├── routes.js          # page specific routing
+            |   |   ├── ShoppingCart.js    # page specific components
+            |   |   └── ...
+            |   └── ...
+            ├── helpers/                   # reusable functions
+            |   └── ...
+            ├── mixins/                    # reusable component functionality
+            |   └── ...
+            ├── index.js
+            └── store.js                   # Vuex store
+```
+
 ### Getting started
 Run npm install:
 
