@@ -1,12 +1,26 @@
 ## Vue.js boilerplate for CMS
 
-This boilerplate of Vue.js does not compile traditional templates. If the component
-does not have translatable text, the component template can be defined via template
-strings.
+**Note**: this is only meant to enchance regular multi page sites and not intended
+for building big applications or a Vue.js specific app. For single page apps use
+[Vue CLI](https://cli.vuejs.org/)
 
-Otherwise, for the sake of translatability, templates should be defined as
-x-templates, where it is also possible to use CMS specific rendering such as
-liquid tags or in the case of Wordpress - PHP.
+This boilerplate for Vue.js does not compile traditional templates. If the component is
+small and accepts props for any text content, then it's best the template be defined
+as template strings.
+
+Otherwise, for the sake of translatability, templates should be defined separately as
+x-templates, where it is also possible to use other means of rendering such as PHP in
+wordpress or liquid tags in Voog.
+
+The compiled script doesn't and shouldn't include the framework itself. Vue and any other
+used libraries should be included separately and rendered conditionally based on whether it
+is used on the page or not. If it's something that's used often, then it may be installed as
+a module. This because the script is not split into chunks and would be unnecessarily large
+for some pages.
+
+The aforementioned also counts for CSS libraries.
+
+The boilerplate is bare-bones - anything project specific can be added and organised incrementally.
 
 ### Getting started
 Run npm install:
@@ -28,4 +42,4 @@ $ npm run build
 ```
 
 TODO:
-1. preferred linter settings (https://eslint.org/docs/rules/)
+1. Find the preferred eslint settings (https://eslint.org/docs/rules/)

@@ -5,8 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const devMode = process.env.NODE_ENV !== 'production';
 
 const entry = {
-        js: './sources/app/index.js',
-        scss: './sources/style/style.scss',
+        js: './src/app/index.js',
+        scss: './src/style/style.scss',
     },
     output = {
         js: 'dist/app.min.js',
@@ -85,7 +85,7 @@ module.exports = {
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'sources/app'),
+            '@': path.resolve(__dirname, 'src/app'),
         },
     },
 };

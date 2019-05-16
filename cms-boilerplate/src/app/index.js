@@ -1,4 +1,4 @@
-import main from '@/pages/main';
+import main from '@/pages/Main';
 
 window.site = {
     init: {
