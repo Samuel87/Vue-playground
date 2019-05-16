@@ -11,13 +11,13 @@ const entry = {
     output = {
         js: 'dist/app.min.js',
         css: 'dist/app.min.css',
-        assetsPath: 'dist/assets'
+        assetsPath: 'dist/assets',
     },
     shell = {
         kit: {
             pushSource: `kit push ${output.js} ${output.css} & kit manifest`,
             watch: 'kit watch',
-        }
+        },
     };
 
 const activeCommand = devMode ? shell.kit.watch : shell.kit.pushSource;
@@ -30,7 +30,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname),
         filename: output.js,
-        publicPath: '/'
+        publicPath: '/',
     },
     mode: devMode ? 'development' : 'production',
     module: {
@@ -46,15 +46,15 @@ module.exports = {
                                 '@babel/preset-env',
                                 {
                                     targets: {
-                                        ie: '9'
+                                        ie: '9',
                                     },
                                     useBuiltIns: 'usage',
-                                    corejs: '3.0'
-                                }
-                            ]
-                        ]
-                    }
-                }
+                                    corejs: '3.0',
+                                },
+                            ],
+                        ],
+                    },
+                },
             },
             {
                 test: /\.(css|sass|scss)$/,
@@ -62,8 +62,8 @@ module.exports = {
                     MiniCssExtractPlugin.loader,
                     'css-loader',
                     'postcss-loader',
-                    'sass-loader'
-                ]
+                    'sass-loader',
+                ],
             },
             {
                 test: /\.(png|svg|jpg|gif|woff|woff2|eot|ttf|otf)$/,
@@ -76,16 +76,16 @@ module.exports = {
                         },
                     },
                 ],
-            }
-        ]
+            },
+        ],
     },
     plugins: [
         extractPlugin,
-        // shellPlugin
+        // shellPlugin,
     ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'sources/app'),
         },
-    }
+    },
 };
