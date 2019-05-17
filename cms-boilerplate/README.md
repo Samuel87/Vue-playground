@@ -51,9 +51,9 @@ File structure example:
             │   ├── AppModal.js
             │   └── ...
             ├── pages/                       # a Vue instance for every page
-            |   ├── Home.js
-            |   ├── products/
-            |   |   ├── index.js             # so we can import ProductPage directly
+            |   ├── HomePage.js
+            |   ├── ProductsPage/
+            |   |   ├── index.js             # so we can import ProductsPage directly
             |   |   ├── routes.js            # page specific routing
             |   |   ├── ProductsCart.js      # page specific components
             |   |   ├── ProductsList.js
