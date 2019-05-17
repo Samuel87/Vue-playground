@@ -2,51 +2,42 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
 <script>
-// API Docs - https://vuejs.org/v2/api/
 
+// Vue options (ordered)
+// https://vuejs.org/v2/style-guide/#Component-instance-options-order-recommended
 new Vue({
     el: '#app',
-    data: {
-
-    },
-});
-
-// Global component
-Vue.component('my-component', {
-    data() {
-        return {
-            /*
-                Data must be returned in components.
-            */
-        };
-    },
-    props: [],  // Define properties that have been passed in the component.
-    mixins: [], // Import reusable code.
-    components: {
-        /*
-            Import local components and include them here.
-        */
-    },
-    template: '', // Use in runtime versions when not using a compiler
+    name: '',
+    delimiters: [],
+    components: {},
+    directives: {},
+    filters: {},
+    mixins: [],
+    inheritAttrs: true,
+    model: {},
+    props: {},
+    data: {},
     computed: {
         /*
-            The end results for this and methods are the same.
-            However, computed properties are cached and will only re-evaluate
-            when some of its dependencies have changed. So it they wont be invoked
-            whenever a re-render happens.
-        */
-    },
-    methods: {
-        /*
-            A method invocation will always run the function whenever a re-render happens.
+        The end results for this and methods are the same.
+        However, computed properties are cached and will only re-evaluate
+        when some of its dependencies have changed. So it they wont be invoked
+        whenever a re-render happens.
         */
     },
     watch: {
         /*
-            The watch options should be used only for asynchronous or expensive operations
-            in response to data change. For simple operations use computed properties.
+        The watch options should be used only for asynchronous or expensive operations
+        in response to data change. For simple operations use computed properties.
         */
     },
+    // lifecycle hooks here
+    methods: {
+        /*
+        A method invocation will always run the function whenever a re-render happens.
+        */
+    },
+    template: '',
 });
 
 </script>

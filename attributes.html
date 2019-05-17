@@ -1,10 +1,20 @@
 <style type="text/css">
-    [v-cloak] {
-        display: none !important;
-    }
+    [v-cloak] { display: none !important; }
 </style>
 
 <div id="app">
+    <!-- recommended order of attributes:
+        1. is
+        2. v-for
+        3. v-if, v-else-if, v-else, v-show, v-cloak
+        4. v-once
+        5. id
+        6. ref, key, slot
+        7. v-model
+        8. (all unspecified bound & unbound attributes)
+        9. v-on
+        10. v-html, v-text
+    -->
 
     <!-- v-for -->
     <ol>
@@ -12,10 +22,13 @@
     </ol>
 
     <!--  v-if & v-show -->
+    <!--  -------------------------------------------- -->
     <div v-show="show">I"m shown</div>
-    <span v-if="show" :title="text">😁</span>
-    <span v-else-if="show === null" :title="text">Null</span>
-    <span v-else>😞</span>
+    <!-- NB! v-if should not be on the same element as v-for -->
+    <!-- NB2! if v-if + v-else are the same tag, add a key -->
+    <span v-if="show" :title="text" key="happy-face">😁</span>
+    <span v-else-if="show === null" :title="text" key="no-face">Null</span>
+    <span v-else key="sad-facce">😞</span>
 
     <!-- v-model -->
     <input type="text" placeholder="Enter Text..." v-model="text"/>
@@ -58,7 +71,6 @@
         {{ tab.name }}
     </button>
     <component :is="currentTab.component" class="tab"></component>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
