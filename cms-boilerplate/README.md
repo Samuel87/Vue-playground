@@ -9,8 +9,7 @@ strings.
 
 Otherwise, for the sake of translatability, templates should be defined separately as x-templates,
 where it is also possible to use other means of rendering such as PHP in wordpress or liquid tags
-in Voog.
-**(x-templates need to be defined outside the DOM element to which Vue is attached.)**
+in Voog.**(x-templates need to be defined outside the DOM element to which Vue is attached.)**
 
 The compiled script doesn't and shouldn't include the framework itself. Vue and any other used
 libraries should be included separately and included conditionally based on whether it is used on the
@@ -27,7 +26,7 @@ more work to change required meta tags every time a route changes. On top of tha
 [using history mode](https://router.vuejs.org/guide/essentials/history-mode.html), there is
 a requirement for server configuration for a catch-all fallback route, which isn't always possible
 to do. Components can also be conditionally rendered
-[using the <component> tag](https://vuejs.org/v2/guide/components-dynamic-async.html)
+[using the `<component>` tag](https://vuejs.org/v2/guide/components-dynamic-async.html)
 
 File structure example:
 ```
