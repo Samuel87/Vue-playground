@@ -1,12 +1,12 @@
 ## Vue.js boilerplate for CMS
 
-**Note**: this is only meant to enchance regular multi page sites and not intended
-for building big applications or a Vue.js specific app. For single page apps use
+**Note**: this is only meant to enchance static site pages and not intended
+for building big web applications or single page apps. For single page apps use
 [Vue CLI](https://cli.vuejs.org/).
 
-This boilerplate for Vue.js does not compile traditional templates. If the component is
-small and accepts props for any text content, then it's best the template be defined
-as template strings.
+This boilerplate for Vue.js does not compile traditional Vuesingle file components.
+If the component is small and accepts props for any text content, then it's best the
+template be defined as template strings.
 
 Otherwise, for the sake of translatability, templates should be defined separately as
 x-templates, where it is also possible to use other means of rendering such as PHP in
@@ -21,6 +21,10 @@ for some pages.
 The aforementioned also counts for CSS libraries.
 
 The boilerplate is bare-bones - anything project specific can be added and organised incrementally.
+
+**Note2**: use Vue-router only where SEO isn't necessary, like to enchance a single view UX flow.
+That's because search engines may have trouble rendering Javascript and it would also mean more
+work to change required meta tags every time a route changes.
 
 File structure example:
 ```
