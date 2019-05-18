@@ -1,5 +1,24 @@
-<div id="app">
+<style>
 
+.fade-enter-active {
+    animation: fade .2s;
+}
+
+.fade-leave-active {
+    animation: fade .2s reverse;
+}
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+</style>
+
+<div id="app">
     <template v-if="showEmailInput">
         <label>Email</label>
         <input name="email" placeholder="Enter your email address" key="email">
@@ -12,17 +31,24 @@
 
     <div>
         <button @click="showEmailInput = !showEmailInput">Toggle</button>
+
+        <transition name="fade" mode="out-in">
+            <span :key="showEmailInput">{{ showEmailInput ? 'showing email' : 'showing username' }}</span>
+        </transition>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 
-new Vue({
-    // if we define a key on the element, they wont be reused (resets input values in this case)
-    // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
-    // https://vuejs.org/v2/api/#key
+// if we define a key on the element, they will be reused instead of patched.
+// In this case, because of the key, the input values will be reset and the
+// respective transition will trigger on email change.
+//
+// https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
+// https://vuejs.org/v2/api/#key
 
+new Vue({
     el: '#app',
     data: {
         showEmailInput: true,
