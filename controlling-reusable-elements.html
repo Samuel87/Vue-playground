@@ -1,0 +1,32 @@
+<div id="app">
+
+    <template v-if="showEmailInput">
+        <label>Email</label>
+        <input name="email" placeholder="Enter your email address" key="email">
+    </template>
+
+    <template v-else>
+        <label>Username</label>
+        <input name="email" placeholder="Enter your username" key="username">
+    </template>
+
+    <div>
+        <button @click="showEmailInput = !showEmailInput">Toggle</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+new Vue({
+    // if we define a key on the element, they wont be reused (resets input values in this case)
+    // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
+    // https://vuejs.org/v2/api/#key
+
+    el: '#app',
+    data: {
+        showEmailInput: true,
+    },
+});
+
+</script>
