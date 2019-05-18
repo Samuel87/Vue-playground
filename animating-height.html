@@ -1,0 +1,137 @@
+<style type="text/css">
+.tabs > * {
+    will-change: height;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.tab {
+    background-color: lightgray;
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  transition: height .2s ease-in-out;
+  overflow: hidden;
+}
+
+.expand-enter,
+.expand-leave-to {
+  height: 0;
+}
+
+</style>
+
+<div id="app">
+    <div class="tabs">
+        <div
+            v-for="tab in tabs"
+            :key="tab.name"
+            :class="['tab-button', { active: currentTab.name === tab.name }]"
+        >
+            <button @click="switchTab(tab)">{{ tab.name }}</button>
+
+            <transition-expand>
+                <component
+                    :is="currentTab.component"
+                    v-if="tab === currentTab"
+                    class="tab"
+                ></component>
+            </transition-expand>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+var tabs = [
+    {
+        name: 'Home',
+        component: {
+            template: '<div>Home component</div>',
+        },
+    },
+    {
+        name: 'Posts',
+        component: {
+            template: '<div>Posts component</div>',
+        },
+    },
+    {
+        name: 'Archive',
+        component: {
+            template: '<div>Archive component</div>',
+        },
+    },
+];
+
+const TransitionExpand = {
+    name: 'transition-expand',
+    functional: true,
+    render(createElement, context) {
+        const data = {
+            props: {
+                name: 'expand',
+            },
+            on: {
+                afterEnter(element) {
+                    element.style.height = 'auto';
+                },
+                enter(element) {
+                    const width = getComputedStyle(element).width;
+
+                    element.style.width = width;
+                    element.style.position = 'absolute';
+                    element.style.visibility = 'hidden';
+                    element.style.height = 'auto';
+
+                    const height = getComputedStyle(element).height;
+
+                    element.style.width = null;
+                    element.style.position = null;
+                    element.style.visibility = null;
+                    element.style.height = 0;
+
+                    getComputedStyle(element).height;
+
+                    setTimeout(() => {
+                        element.style.height = height;
+                    });
+                },
+                leave(element) {
+                    const height = getComputedStyle(element).height;
+
+                    element.style.height = height;
+
+                    getComputedStyle(element).height;
+
+                    setTimeout(() => {
+                        element.style.height = 0;
+                    });
+                },
+            },
+        };
+
+        return createElement('transition', data, context.children);
+    },
+};
+
+new Vue({
+    el: '#app',
+    components: {
+        TransitionExpand,
+    },
+    data: {
+        tabs: tabs,
+        currentTab: tabs[0],
+    },
+    methods: {
+        switchTab(tab) {
+            tab === this.currentTab ? this.currentTab = {} : this.currentTab = tab;
+        },
+    },
+});
+
+</script>
