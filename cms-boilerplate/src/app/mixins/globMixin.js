@@ -5,12 +5,17 @@ import { mq, checkMediaWidth } from '@/util/helpers';
 
 export default {
     data: () => ({
-        isMobile: false, // we want this public so we don't proxy it
+        isMobile: false, // we want these public so we don't proxy it
+        mqSupported: true,
     }),
     mounted() {
-        this.$_onWindowResize();
+        if (!mq) {
+            this.mqSupported = false;
+        } else {
+            this.$_onWindowResize();
 
-        window.addEventListener('resize', this.$_onWindowResize);
+            window.addEventListener('resize', this.$_onWindowResize);
+        }
     },
     methods: {
         $_onWindowResize() {
