@@ -17,14 +17,14 @@ export default {
             window.addEventListener('resize', this.$_onWindowResize);
         }
     },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.$_onWindowResize);
+    },
     methods: {
         $_onWindowResize() {
             checkMediaWidth(mq, (matches) => {
                 this.isMobile = matches;
             });
         },
-    },
-    beforeDestroy() {
-        window.removeEventListener('resize', this.$_onWindowResize);
     },
 };
