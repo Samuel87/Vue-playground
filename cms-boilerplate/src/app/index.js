@@ -1,7 +1,7 @@
-import main from '@/pages/Main';
+import CommonPage from '@/pages/CommonPage';
 
-window.site = {
-    init: {
-        main,
+window.app = {
+    load: {
+        CommonPage,
     },
 };

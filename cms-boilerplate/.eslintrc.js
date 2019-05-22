@@ -10,7 +10,7 @@ module.exports = {
         "jquery": true,
     },
     "globals": {
-        "site": true,
+        "app": true, // window.app
         "Vue": true,
         "VueRouter": true,
     },
@@ -105,7 +105,7 @@ module.exports = {
             1,
             { "max": 2 }
         ],
-        "new-cap": 1,                           // require constructor names to begin with a capital letter
+        "new-cap": 0,                           // require constructor names to begin with a capital letter
         "new-parens": 1,                        // require parentheses when invoking a constructor with no arguments
         "no-bitwise": 1,                        // disallow bitwise operators
         "no-continue": 1,                       // disallow continue statements
