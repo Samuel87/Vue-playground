@@ -23,7 +23,7 @@ const entry = {
 const activeCommand = devMode ? shell.kit.watch : shell.kit.pushSource;
 
 const extractPlugin = new MiniCssExtractPlugin({ filename: output.css });
-// const shellPlugin = new WebpackShellPlugin({ onBuildStart: [activeCommand] });
+// const shellPlugin = new WebpackShellPlugin({ onBuildEnd: [activeCommand] });
 
 module.exports = {
     entry: [entry.js, entry.scss],
