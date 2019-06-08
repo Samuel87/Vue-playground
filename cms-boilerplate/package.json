@@ -2,7 +2,6 @@
     "name": "vue-cms-boilerplate",
     "version": "1.0.0",
     "private": true,
-    "sasslintConfig": "sass-lint.yml",
     "eslintConfig": ".eslintrc.js",
     "scripts": {
         "watch": "cross-env NODE_ENV=development webpack --watch",
@@ -31,7 +30,6 @@
         "mini-css-extract-plugin": "^0.5.0",
         "node-sass": "^4.10.0",
         "postcss-loader": "^3.0.0",
-        "sass-lint": "^1.13.1",
         "sass-loader": "^7.1.0",
         "style-loader": "^0.23.1",
         "webpack": "^4.29.6",

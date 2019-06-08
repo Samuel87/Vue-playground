@@ -1,0 +1,182 @@
+<div id="app">
+    <div class="flex">
+        <div class="flex-col">
+            <div id="app-admin-category-maker"></div>
+        </div>
+
+        <div class="flex-col">
+            <div id="app-admin-category-picker"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-template" id="app-admin-category-maker-template">
+    <ul>
+        <li>
+            <div>Add Categories</div>
+            <input type="text" v-model="newCategory" @keydown.enter="addCategory">
+        </li>
+
+        <li v-for="category in categories" :key="category.id">
+            <input type="text" :value="category.text">
+            <button :disabled="category.subcategories.length > 0" @click="removeCategory(category.id)">X</button>
+
+            <ul>
+                <li>
+                    <div>Add Sub-Categories</div>
+                    <input type="text" @keydown.enter="addSubCategory(category, $event)">
+                </li>
+
+                <li v-for="subcategory in category.subcategories" :key="subcategory.id">
+                    <input type="text" :value="subcategory.text">
+                    <button @click="removeSubCategory(subcategory.id, category)">X</button>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</script>
+
+<script type="text/x-template" id="app-admin-category-picker-template">
+    <div>
+        <select v-model="selectedCategory" @change="onChange">
+            <option :value="null">
+                Select Category
+            </option>
+            <option v-for="category in options" :key="category.id" :value="category">
+                {{ category.text }}
+            </option>
+        </select>
+
+        <select
+            v-if="hasSubCategories"
+            v-model="selectedSubCategory"
+            @change="onChange"
+        >
+            <option :value="null">
+                Select Sub Category
+            </option>
+            <option v-for="subcategory in selectedCategory.subcategories" :key="subcategory.id" :value="subcategory">
+                {{ subcategory.text }}
+            </option>
+        </select>
+    </div>
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+var STORAGE_KEY = 'app_categories';
+var browserStorage = {
+    fetch() {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    },
+    save(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    },
+};
+
+new Vue().$mount('#app');
+
+var CategoryMaker = Vue.extend({
+    data: function() {
+        return {
+            newCategory: '',
+            categories: [],
+        };
+    },
+    watch: {
+        categories: {
+            deep: true,
+            handler: function() {
+                browserStorage.save(this.categories);
+            },
+        },
+    },
+    created() {
+        this.categories = browserStorage.fetch();
+    },
+    methods: {
+        addCategory() {
+            var trimmedText = this.newCategory.trim();
+
+            if (trimmedText) {
+                this.categories.push({
+                    id: this.categories.length,
+                    text: trimmedText,
+                    subcategories: [],
+                });
+
+                this.newCategory = '';
+            }
+        },
+        addSubCategory(category, event) {
+            var value = event.target.value;
+
+            if (value) {
+                category.subcategories.push({
+                    id: category.subcategories.length,
+                    text: value,
+                });
+            }
+
+            event.target.value = '';
+        },
+        removeCategory(id) {
+            if (window.confirm('Confirm to delete this category')) {
+                this.categories = this.categories.filter(function(entry) {
+                    return entry.id !== id;
+                });
+            }
+        },
+        removeSubCategory(id, category) {
+            if (window.confirm('Confirm to delete this sub category')) {
+                category.subcategories = category.subcategories.filter(function(entry) {
+                    return entry.id !== id;
+                });
+            }
+        },
+    },
+    template: '#app-admin-category-maker-template',
+});
+new CategoryMaker().$mount('#app-admin-category-maker');
+
+var CategoryPicker = Vue.extend({
+    data: function() {
+        return {
+            options: browserStorage.fetch(),
+            selectedCategory: null,
+            selectedSubCategory: null,
+        };
+    },
+    watch: {
+        selectedCategory() {
+            this.selectedSubCategory = null;
+        },
+    },
+    computed: {
+        hasSubCategories() {
+            var category = this.selectedCategory;
+            return category && category.subcategories && category.subcategories.length > 0;
+        },
+    },
+    methods: {
+        onChange() {
+            console.log(this.selectedCategory, this.selectedSubCategory);
+        },
+    },
+    template: '#app-admin-category-picker-template',
+});
+new CategoryPicker().$mount('#app-admin-category-picker');
+
+</script>
+
+<style>
+    .flex {
+        display: flex;
+    }
+
+    .flex-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+</style>
