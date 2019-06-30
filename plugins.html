@@ -1,0 +1,44 @@
+<div id="app">
+    <my-component></my-component>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+    const BreakpointObserverPlugin = {
+        install(Vue) {
+            const matcher = window.matchMedia('(max-width: 1023px)');
+
+            let observer = Vue.observable({ isHandset: matcher.matches })
+
+            window.addEventListener('resize', () => {
+                observer.isHandset = matcher.matches;
+            });
+
+            Vue.prototype.$breakpointObserver = observer;
+        },
+    };
+
+    const MyComponent = {
+        template: `
+            <div>
+                <div v-if="$breakpointObserver.isHandset">
+                    handset
+                </div>
+                <div v-else>
+                    desktop
+                </div>
+            </div>
+        `,
+    };
+
+    Vue.use(BreakpointObserverPlugin);
+
+    new Vue({
+        el: '#app',
+        components: {
+            MyComponent,
+        },
+    });
+
+</script>

@@ -89,9 +89,10 @@ const TransitionExpand = {
 
                     const height = getComputedStyle(element).height;
 
-                    element.style.width = null;
-                    element.style.position = null;
-                    element.style.visibility = null;
+                    // we dont reset with null, because it silently fails in IE11
+                    element.style.removeProperty('width');
+                    element.style.removeProperty('position');
+                    element.style.removeProperty('visibility');
                     element.style.height = 0;
 
                     getComputedStyle(element).height;
