@@ -1,0 +1,139 @@
+<div id="app">
+    <todo-input></todo-input>
+    <todo-list></todo-list>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    const STORAGE_KEY = 'vue_todos';
+
+    // a helper function to handle localStorage
+    const browserStorage = {
+        fetch(storageKey) {
+            return JSON.parse(localStorage.getItem(storageKey) || '[]');
+        },
+        save(storageKey, data) {
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        },
+        clear(storageKey) {
+            localStorage.removeItem(storageKey);
+        },
+        isStorageAllowed() {
+            const storageTest = 'storage_test';
+
+            try {
+                localStorage.setItem(storageTest, storageTest);
+                localStorage.removeItem(storageTest);
+
+                return true;
+            } catch (e) {
+                return false;
+            }
+        },
+    };
+
+
+    class Store {
+        constructor(obj) {
+            this.hydrateStore(obj);
+        }
+
+        hydrateStore(obj) {
+            for (const k in obj) {
+                this[k] = {
+                    state: Vue.observable(obj[k].state || {}),
+                    getters: obj[k].getters || {},
+                    actions: obj[k].actions || {},
+                };
+            }
+        }
+    };
+
+    // set store properties
+    const state = {
+        items: browserStorage.fetch(STORAGE_KEY),
+    };
+
+    const getters = {
+        todoCount() {
+            return state.items.length;
+        }
+    };
+
+    const actions = {
+        addTodo(todo) {
+            state.items.push(todo);
+            actions.saveTodos(state.items);
+        },
+        saveTodos(newValue) {
+            browserStorage.save(STORAGE_KEY, newValue);
+        },
+    };
+
+    // store module
+    const todosModule = {
+        state,
+        getters,
+        actions,
+    };
+
+
+    const TodoInput = {
+        data: () => ({
+            newTodo: '',
+            uid: 0,
+        }),
+        created() {
+            this.uid = this.$store.todos.getters.todoCount();
+        },
+        methods: {
+            addTodo() {
+                const todo = {
+                    id: this.uid++,
+                    text: this.newTodo,
+                };
+
+                this.$store.todos.actions.addTodo(todo);
+
+                this.newTodo = '';
+            }
+        },
+        template: `
+            <div>
+                <input type="text" v-model="newTodo" @keydown.enter="addTodo">
+            </div>
+        `,
+    };
+
+    const TodoList = {
+        computed: {
+            todos() {
+                return this.$store.todos.state.items;
+            }
+        },
+        template: `
+            <div>
+                <div v-for="todo in todos" :key="'todo_' + todo.id">
+                    {{ todo.text }}
+                </div>
+            </div>
+        `,
+    };
+
+
+    const store = new Store({
+        todos: todosModule,
+    });
+
+    // integrate store to be accessible in all components
+    Vue.prototype.$store = store;
+
+    new Vue({
+        el: '#app',
+        components: {
+            TodoInput,
+            TodoList,
+        },
+    });
+
+</script>
