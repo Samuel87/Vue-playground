@@ -1,0 +1,112 @@
+<style>
+    #app {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    [v-cloak] {
+        font-size: 0 !important;
+    }
+
+    [v-cloak].v-cloak-ph-line,
+    [v-cloak].v-cloak-ph-title,
+    .ph-line,
+    .ph-title {
+        margin-bottom: 1rem;
+        background: rgba(0, 0, 0, .025);
+        background-image: linear-gradient(to right, rgba(0, 0, 0, .025) 0%, rgba(0, 0, 0, .08) 20%, rgba(0, 0, 0, .025) 40%, rgba(0, 0, 0, .025) 100%);
+        background-size: 800px 100px;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: ph-shimmer;
+        animation-timing-function: linear;
+    }
+    [v-cloak].v-cloak-ph-line,
+    .ph-line {
+        height: 18px;
+    }
+    [v-cloak].v-cloak-ph-title,
+    .ph-title  {
+        height: 38px;
+    }
+
+    .ph-line {
+        width: 50%;
+    }
+    .ph-line:nth-child(odd) {
+        width: 65%;
+    }
+    .ph-line:nth-child(4n) {
+        width: 45%;
+    }
+
+    @keyframes ph-shimmer {
+        0% {
+            background-position: -400px 0;
+        }
+        100% {
+            background-position: 400px 0;
+        }
+    }
+</style>
+
+<div id="app">
+    <!-- initial load placeholders -->
+    <div class="v-cloak-ph-title" v-cloak><h2>{{ title }}</h2></div>
+    <div class="v-cloak-ph-line" v-cloak>{{ message }}</div>
+
+    <br>
+
+    <!-- request placeholders -->
+    <template v-if="loading" v-cloak>
+        <div
+            v-for="placeholder in 12"
+            :key="'placeholder_' + placeholder"
+            class="ph-line"
+        ></div>
+    </template>
+    <template v-else>
+        <p v-for="user in users" :key="'user' + user.name">
+            {{ user.name }}
+        </p>
+    </template>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        data: {
+            users: [],
+            loading: false,
+            message: 'This is a list of users.',
+            title: 'User List',
+        },
+        created: function() {
+            this.loading = true;
+
+            setTimeout(() => {
+                this.getUsers();
+            }, 6000);
+        },
+        methods: {
+            getUsers: function() {
+                fetch(`https://jsonplaceholder.typicode.com/users`)
+                    .then((result) => result.json())
+                    .then((result) => {
+                        this.users = result;
+                        this.loading = false;
+                    });
+            },
+        },
+    });
+
+    setTimeout(() => {
+        app.$mount('#app');
+    }, 3000);
+</script>
