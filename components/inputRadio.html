@@ -1,76 +1,115 @@
 <div id="app">
-    <input-radio
-        label="Yes"
-        name="input-radio"
-        :value="true"
-        v-model="option"
-    ></input-radio>
+    <div>
+        <input-radio
+            :value="true"
+            name="fruits"
+            label="Yes"
+            checked
+            v-model="selectedOption"
+        ></input-radio>
+    </div>
 
-    <input-radio
-        label="No"
-        name="input-radio"
-        :value="false"
-        v-model="option"
-    ></input-radio>
+    <div>
+        <input-radio
+            :value="{ id: 1, name: 'avocado', price: 3.99 }"
+            name="fruits"
+            :error="hasError"
+            label="Avocado"
+            label-right
+            v-model="selectedOption"
+        >
+            <span>| Price: 3.99 €</span>
+        </input-radio>
+    </div>
 
-    {{ option }}
+    <div>
+        {{ selectedOption }}
+    </div>
 </div>
 
 <script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
 <script>
 
-const inputRadio = {
-    template: `
-        <label class="input-radio" :class="{ error: error }">
-            <span class="input-radio-label" v-text="label"></span>
-
-            <input
-                v-bind="$attrs"
-                type="radio"
-                :name="name"
-                class="input-radio-field"
-                :value="value"
-                :checked="value === model"
-                @change="$emit('change', value)"
-            >
-
-            <slot></slot>
-        </label>
-    `,
-    model: {
-        prop: 'model',
-        event: 'change',
-    },
-    props: {
+    // COMPONENT
+    const InputRadio = {
+        name: 'input-radio',
         model: {
-            type: [String, Array, Boolean, Number],
-            default: null,
+            prop: 'model',
+            event: 'change',
         },
-        name: String,
-        value: {
-            type: [String, Boolean],
-            required: true,
+        props: {
+            model: {
+                type: [String, Boolean, Number, Array, Object],
+                default: null,
+            },
+            value: {
+                type: [String, Boolean, Number, Array, Object],
+                required: true,
+            },
+            error: {
+                type: Boolean,
+                default: false,
+            },
+            disabled: {
+                type: Boolean,
+                default: false,
+            },
+            checked: {
+                type: Boolean,
+                default: false,
+            },
+            label: {
+                type: String,
+                required: true,
+            },
+            labelRight: Boolean,
+            name: String,
         },
-        label: {
-            type: String,
-            required: true,
+        mounted() {
+            if (this.checked && this.model !== this.value) {
+                this.$emit('change', this.value);
+            }
         },
-        error: {
-            type: Boolean,
-            default: false,
-        },
-    },
-};
+        template: `
+            <label :class="['input-radio', { error, disabled }]">
+                <span
+                    v-if="!labelRight"
+                    :class="['input-label']"
+                    v-text="label"
+                ></span>
 
-new Vue({
-    el: '#app',
-    data: {
-        option: false,
-    },
-    components: {
-        inputRadio,
-    },
-});
+                <input
+                    :value="value"
+                    type="radio"
+                    :checked="checked || value === model"
+                    :disabled="disabled"
+                    :name="name"
+                    :class="['input-field']"
+                    @change="$emit('change', value)"
+                />
+
+                <span
+                    v-if="labelRight"
+                    :class="['input-label']"
+                    v-text="label"
+                ></span>
+
+                <slot></slot>
+            </label>
+        `,
+    };
+
+
+    // EXAMPLE
+    new Vue({
+        el: '#app',
+        data: {
+            selectedOption: null, // initial value can be set here or add checked to the checkbox
+            hasError: true,
+        },
+        components: {
+            InputRadio,
+        },
+    });
 
 </script>
-

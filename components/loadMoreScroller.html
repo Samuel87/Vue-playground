@@ -1,0 +1,146 @@
+<div id="app">
+    <load-more-scroller
+        :auto-load-offset="1000"
+        :on-load-more="fetchMore"
+        :on-load="fetchData"
+        button-label="Loading..."
+        auto-load
+    >
+        <beer-post
+            v-for="beer in beers"
+            :key="beer.id"
+            :item="beer"
+        ></beer-post>
+    </load-more-scroller>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+
+    // REQUIRED HELPER
+    const debounce = (callback, time) => {
+        let timeout;
+
+        return function(...args) {
+            const fnCall = () => callback.apply(this, args);
+            clearTimeout(timeout);
+            timeout = setTimeout(fnCall, time);
+        }
+    }
+
+    // COMPONENT
+    const LoadMoreScroller = {
+        name: 'load-more-scroller',
+        props: {
+            onLoadMore: {
+                type: Function,
+                required: true,
+            },
+            onLoad: {
+                type: Function,
+                required: false,
+            },
+            autoLoad: {
+                type: Boolean,
+                default: false,
+            },
+            autoLoadOffset: {
+                type: Number,
+                default: 0,
+            },
+            buttonLabel: {
+                type: String,
+                required: true,
+            },
+        },
+        data: () => ({
+            loading: true,
+        }),
+        mounted() {
+            if (this.onLoad) {
+                this.onLoad(this.loadComplete);
+            }
+
+            if (this.autoLoad) {
+                window.addEventListener('scroll', this.debouncedHandleScroll);
+            }
+        },
+        beforeDestroy() {
+            window.removeEventListener('scroll', this.debouncedHandleScroll);
+        },
+        methods: {
+            scrolledToBottom() {
+                const scroll = window.scrollY || window.pageYOffset;
+                const elTop = this.$el.getBoundingClientRect().top + scroll;
+                const viewportBottom = scroll + window.innerHeight;
+                const elBottom = elTop + this.$el.clientHeight - this.autoLoadOffset;
+
+                return elBottom <= viewportBottom;
+            },
+            loadComplete() {
+                this.loading = false;
+            },
+            debouncedHandleScroll: debounce(function() { // must not be an arrow fn
+                if (this.scrolledToBottom() && this.autoLoad) {
+                    this.loading = true;
+                    this.onLoadMore(this.loadComplete);
+                }
+            }, 200),
+        },
+        template: `
+            <div class="load-more-scroller">
+                <slot></slot>
+                <button
+                    class="load-more-button"
+                    @click="onLoadMore(loadComplete)"
+                    v-text="buttonLabel"
+                ></button>
+            </div>
+        `,
+    };
+
+
+    // EXAMPLE
+    const BeerPost = {
+        name: 'beer-post',
+        props: {
+            item: Object,
+        },
+        template: `
+            <div class="post">
+                <img :src="item.image_url" height="350" />
+            </div>
+        `
+    };
+
+    new Vue({
+        el: '#app',
+        components: {
+            LoadMoreScroller,
+            BeerPost,
+        },
+        data: {
+            beers: [],
+            perPage: 10,
+        },
+        methods: {
+            fetchData(callback) {
+                axios.get(`https://api.punkapi.com/v2/beers?per_page=${this.perPage}`)
+                    .then((response) => {
+                        this.beers = response.data;
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    })
+                    .then(() => {
+                        callback ? callback() : null;
+                    });
+            },
+            fetchMore(done) {
+                this.perPage += 10;
+                this.fetchData(done);
+            }
+        },
+    });
+</script>

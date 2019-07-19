@@ -1,150 +1,187 @@
 <div id="app">
-    <input-checkbox
-        value="Green Shoes"
-        label="Green shoes"
-        name="input-text"
-        v-model="options"
-    ></input-checkbox>
+    <div>
+        <input-checkbox
+            value="Green Shoes"
+            label="Green shoes"
+            name="Shoes"
+            checked
+            disabled
+            error
+            required
+            label-right
+            v-model="options"
+        ></input-checkbox>
+    </div>
 
-    <input-checkbox
-        :value="{ id: 0, type: 'sport', color: 'red' }"
-        label="Red shoes"
-        name="input-text"
-        v-model="options"
-    ></input-checkbox>
+    <div>
+        <input-checkbox
+            :value="{ id: 0, type: 'sport', color: 'red' }"
+            label="Red shoes"
+            name="Shoes"
+            v-model="options"
+        ></input-checkbox>
+    </div>
 
-    {{ options }}
+    <div>
+        <input-checkbox
+            :value="{ id: 1, type: 'sport', color: 'blue' }"
+            label="Blue shoes"
+            name="Shoes"
+            checked="checked"
+            v-model="options"
+        ></input-checkbox>
+    </div>
+
+    <div>
+        {{ options }}
+    </div>
 </div>
 
 <script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
 <script>
 
-const inputCheckbox = {
-    template: `
-        <label class="input-checkbox pointer">
-            <span class="input-checkbox-label" v-text="label"></span>
-
-            <input
-                v-bind="$attrs"
-                type="checkbox"
-                :required="required"
-                :checked="checkboxState"
-                @change="toggle()"
-            >
-
-            <slot></slot>
-        </label>
-    `,
-    inheritAttrs: false,
-    model: {
-        prop: 'model',
-        event: 'change',
-    },
-    props: {
+    // COMPONENT
+    const InputCheckbox = {
+        name: 'input-checkbox',
         model: {
-            type: [String, Array, Boolean, Number],
-            default: null,
+            prop: 'model',
+            event: 'change',
         },
-        name: String,
-        value: {
-            type: [String, Boolean, Object],
-            required: true,
+        props: {
+            model: {
+                type: [String, Boolean, Number, Array],
+                default: null,
+            },
+            value: {
+                type: [String, Boolean, Number, Object],
+                required: true,
+            },
+            error: {
+                type: Boolean,
+                default: false,
+            },
+            disabled: {
+                type: Boolean,
+                default: false,
+            },
+            required: {
+                type: Boolean,
+                default: false,
+            },
+            label: {
+                type: String,
+                required: true,
+            },
+            checked: Boolean,
+            labelRight: Boolean,
+            name: String,
         },
-        label: {
-            type: String,
-            required: true,
+        computed: {
+            checkboxState() {
+                if (this.model === null) {
+                    return this.checked;
+                }
+
+                if (Array.isArray(this.model)) {
+                    if (this.isObject(this.value)) {
+                        return this.valueInModel;
+                    }
+
+                    return this.model.indexOf(this.value) !== -1;
+                }
+
+                return this.model;
+            },
+            valueInModel() {
+                return this.model.some((value) => JSON.stringify(value) === JSON.stringify(this.value));
+            },
         },
-        error: {
-            type: Boolean,
-            default: false,
-        },
-        required: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    watch: {
-        checked(newVal) {
-            if (newVal !== this.checkboxState) {
-                this.toggle();
+        watch: {
+            checked(newState) {
+                if (newState !== this.checkboxState) {
+                    this.toggleState();
+                }
             }
-        }
-    },
-    mounted() {
-        if (this.checked && !this.checkboxState) {
-            this.toggle();
-        }
-    },
-    methods: {
-        toggle() {
-            if (this.disabled) {
-                return;
-            };
+        },
+        mounted() {
+            if (this.checked && !this.checkboxState) {
+                this.toggleState();
+            }
+        },
+        methods: {
+            toggleState() {
+                if (this.disabled) { return };
 
-            let value = this.model;
+                let { model, value } = this;
 
-            if (Array.isArray(value)) {
-                if (this.isObject(this.value)) {
-                    // An object value must have a unique id
-                    const matchedIndex = this.findObjectIndexById(value, this.value);
+                if (Array.isArray(model)) {
+                    if (this.isObject(value)) {
 
-                    if (matchedIndex === -1) {
-                        value.push(this.value);
+                        if (!this.valueInModel) {
+                            model.push(value);
+                        } else {
+                            model = model.filter((obj) => JSON.stringify(obj) !== JSON.stringify(value));
+                        }
                     } else {
-                        value.splice(matchedIndex, 1);
+                        const indexOfValue = model.indexOf(value);
+
+                        if (indexOfValue === -1) {
+                            model.push(value);
+                        } else {
+                            model.splice(indexOfValue, 1);
+                        }
                     }
                 } else {
-                    value = value.slice();
-                    const i = value.indexOf(this.value);
-
-                    if (i === -1) {
-                        value.push(this.value);
-                    } else {
-                        value.splice(i, 1);
-                    }
-                }
-            } else {
-                value = !this.checkboxState;
-            }
-
-            this.$emit('change', value);
-        },
-        findObjectIndexById(list, obj) {
-            return list.map(function(obj) {
-                return obj.id;
-            }).indexOf(obj.id);
-        },
-        isObject(obj) {
-            return obj !== null && typeof obj === 'object';
-        },
-    },
-    computed: {
-        checkboxState() {
-            if (this.model === null) {
-                return this.checked;
-            }
-
-            if (Array.isArray(this.model)) {
-                if (this.isObject(this.value)) {
-                    return !this.findObjectIndexById(this.model, this.value);
+                    model = !this.checkboxState;
                 }
 
-                return this.model.indexOf(this.value) !== -1;
-            }
-
-            return this.model;
+                this.$emit('change', model);
+            },
+            isObject(obj) {
+                return obj !== null && typeof obj === 'object';
+            },
         },
-    },
-};
+        template: `
+            <label :class="['input-checkbox', { error, disabled }]">
+                <span
+                    v-if="!labelRight"
+                    :class="['input-label']"
+                    v-text="label"
+                ></span>
 
-new Vue({
-    el: '#app',
-    data: {
-        options: ['Green Shoes'],
-    },
-    components: {
-        inputCheckbox,
-    },
-});
+                <input
+                    :value="value"
+                    type="checkbox"
+                    :checked="checked || checkboxState"
+                    :required="required"
+                    :disabled="disabled"
+                    :name="name"
+                    :class="['input-field']"
+                    @change="toggleState()"
+                />
+
+                <span
+                    v-if="labelRight"
+                    :class="['input-label']"
+                    v-text="label"
+                ></span>
+
+                <slot></slot>
+            </label>
+        `,
+    };
+
+
+    // EXAMPLE
+    const app = new Vue({
+        el: '#app',
+        data: {
+            options: ['Green Shoes'],  // initial value can be set here or add checked to the checkbox
+            checked: true,
+        },
+        components: {
+            InputCheckbox,
+        },
+    });
 
 </script>

@@ -1,0 +1,22 @@
+<div id="app">
+    <input type="text" v-autofocus />
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+    const autofocusDirective = {
+        inserted(el, binding) {
+            if (binding.value !== undefined && !binding.value) { return; }
+
+            el.focus();
+        },
+    };
+
+    Vue.directive('autofocus', autofocusDirective);
+
+    new Vue({
+        el: '#app',
+    });
+
+</script>

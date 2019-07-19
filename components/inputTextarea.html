@@ -1,12 +1,17 @@
 <div id="app">
-    <input-textarea
-        placeholder="Write your message"
-        name="input-textarea"
-        label="Message"
-        required
-        :error="message === ''"
-        v-model="message"
-    ></input-textarea>
+    <div>
+        <input-textarea
+            placeholder="Write your message"
+            name="Message"
+            label="Your Message"
+            required
+            no-resize
+            cols="50"
+            :rows="5"
+            :error="message === ''"
+            v-model="message"
+        ></input-textarea>
+    </div>
 
     {{ message }}
 </div>
@@ -14,56 +19,88 @@
 <script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
 <script>
 
-const inputTextarea = {
-    template: `
-        <label class="input-textarea" :class="{ error: error }">
-            <span v-if="label" class="input-label" v-text="inputLabel">
-                <template v-if="required">*</template>
-            </span>
-
-            <textarea
-                class="input-textarea-field"
-                v-bind="$attrs"
-                :value="model"
-                @input="$emit('input', $event.target.value)"
-            ></textarea>
-        </label>
-    `,
-    inheritAttrs: false,
-    model: {
-        prop: 'model',
-        event: 'input',
-    },
-    props: {
+    // COMPONENT
+    const InputTextarea = {
+        name: 'input-textarea',
+        inheritAttrs: false,
         model: {
-            type: [String, Array, Boolean, Number],
-            default: null,
+            prop: 'model',
         },
-        label: String,
-        required: {
-            type: Boolean,
-            default: false,
+        props: {
+            model: {
+                type: String,
+                default: '',
+            },
+            error: {
+                type: Boolean,
+                default: false,
+            },
+            disabled: {
+                type: Boolean,
+                default: false,
+            },
+            required: {
+                type: Boolean,
+                default: false,
+            },
+            noResize: {
+                type: Boolean,
+                default: false,
+            },
+            rows: Number,
+            label: String,
+            placeholder: String,
+            name: String,
         },
-        error: {
-            type: Boolean,
-            default: false,
-        }
-    },
-    computed: {
-        inputLabel() {
-            return this.required ? this.label + '*' : this.label;
-        },
-    },
-};
+        computed: {
+            formattedLabel() {
+                return this.required ? this.label + '*' : this.label;
+            },
+            styleObject() {
+                let style = {}
 
-new Vue({
-    el: '#app',
-    data: {
-        message: '',
-    },
-    components: {
-        inputTextarea,
-    },
-});
+                if (this.noResize) {
+                    style = { 'resize': 'none' };
+                }
+
+                return style;
+            },
+        },
+        template: `
+            <label :class="['input-textarea', { error, disabled }]">
+                <span
+                    v-if="label"
+                    :class="['input-label']"
+                    v-text="formattedLabel"
+                >
+                    <template v-if="required">*</template>
+                </span>
+
+                <textarea
+                    v-bind="$attrs"
+                    :value="model"
+                    :disabled="disabled"
+                    :required="required"
+                    :rows="rows"
+                    :placeholder="placeholder"
+                    :name="name"
+                    :style="styleObject"
+                    :class="['input-field']"
+                    @input="$emit('input', $event.target.value)"
+                ></textarea>
+            </label>
+        `,
+    };
+
+    // EXAMPLE
+    new Vue({
+        el: '#app',
+        data: {
+            message: '',
+        },
+        components: {
+            InputTextarea,
+        },
+    });
 
 </script>

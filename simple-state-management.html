@@ -34,16 +34,16 @@
 
 
     class Store {
-        constructor(obj) {
-            this.hydrateStore(obj);
+        constructor(modules) {
+            this.hydrateStore(modules);
         }
 
-        hydrateStore(obj) {
-            for (const k in obj) {
-                this[k] = {
-                    state: Vue.observable(obj[k].state || {}),
-                    getters: obj[k].getters || {},
-                    actions: obj[k].actions || {},
+        hydrateStore(modules) {
+            for (const mod in modules) {
+                this[mod] = {
+                    state: Vue.observable(modules[mod].state || {}),
+                    getters: modules[mod].getters || {},
+                    actions: modules[mod].actions || {},
                 };
             }
         }

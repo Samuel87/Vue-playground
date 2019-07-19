@@ -1,124 +1,170 @@
 <div id="app">
-    {{ selected }}
-
     <input-select
         :options="options"
-        :disabled="false"
-        v-model="selected"
-        label="Select"
-    ></input-select>
+        label="Select your edible"
+        show-selected
+        v-model="selectedOption"
+    >
+        <template #close-icon>
+            &#x2715;
+        </template>
+
+        <!-- destructuring  can also work, but wont be polyfilled in IE without CLI, #option="{ option }" -->
+        <template #option="slotProps">
+            -----{{ slotProps.option }}-----
+        </template>
+    </input-select>
 </div>
 
 <script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
 <script>
 
-const inputSelect = {
-    template: `
-        <div class="input-select"
-             :class="{ 'active': isOpen, 'disabled': disabled }"
-             @click="open"
-        >
-            <span v-if="label" class="input-label" v-text="label"></span>
-
-            <span v-if="modelArray" @click.stop="forceClose">X</span>
-
-            <div ref="options" class="input-select-options" v-show="isOpen">
-                <div v-for="(option, i) in options"
-                     :key="i"
-                     class="input-select-option"
-                     :class="{ 'selected': model.includes(option) }"
-                     @click.stop="select(option)"
-                     v-text="option"
-                ></div>
-            </div>
-        </div>
-    `,
-    model: {
-        prop: 'model',
-        event: 'change'
-    },
-    props: {
+    // COMPONENT
+    const InputSelect = {
+        name: 'input-select',
         model: {
-            type: [String, Number, Array, Object],
-            default() {
-                return '';
-            }
+            prop: 'model',
+            event: 'change'
         },
-        label: String,
-        disabled: Boolean,
-        options: Array,
-    },
-    data() {
-        return {
-            isOpen: false,
-        };
-    },
-    created() {
-        document.addEventListener('click', this.documentClick);
-    },
-    methods: {
-        open() {
-            if (!this.disabled) {
-                this.isOpen = true;
-            }
+        props: {
+            model: {
+                type: [String, Number, Array], // if Array, treat as multi-select
+                default: '',
+            },
+            options: {
+                type: Array,
+                required: true,
+            },
+            error: {
+                type: Boolean,
+                default: false,
+            },
+            disabled: {
+                type: Boolean,
+                default: false,
+            },
+            showSelected: {
+                type: Boolean,
+                default: false,
+            },
+            label: String,
         },
-        close() {
-            if (!this.modelArray) {
-                this.isOpen = false;
-            }
+        data: () => ({
+            open: false,
+        }),
+        computed: {
+            treatAsMultiselect() {
+                return Array.isArray(this.model);
+            },
+            showSelectedValue() {
+                return !this.treatAsMultiselect && this.showSelected;
+            },
         },
-        forceClose() {
-            this.isOpen = false;
+        mounted() {
+            document.addEventListener('click', this.documentClick);
         },
-        select(option) {
-            this.close();
-
-            if (this.disabled) {
-                return;
-            };
-
-            let value = this.model;
-
-            if (this.modelArray) {
-                const index = value.indexOf(option);
-
-                if (index === -1) {
-                    value.push(option);
-                } else {
-                    value.splice(index, 1);
+        beforeDestroy() {
+            document.removeEventListener('click', this.documentClick);
+        },
+        methods: {
+            showOptions() {
+                if (!this.disabled) {
+                    this.open = true;
                 }
-            } else {
-                value = option;
-            }
+            },
+            hideOptions() {
+                if (!this.treatAsMultiselect) {
+                    this.open = false;
+                }
+            },
+            onSelect(option) {
+                this.hideOptions();
 
-            this.$emit('change', value);
-        },
-        documentClick(event) {
-            if (!this.$el.contains(event.target)) {
-                this.isOpen = false;
-            }
-        },
-    },
-    computed: {
-        modelArray() {
-            return Array.isArray(this.model);
-        },
-    },
-    destroyed() {
-        document.removeEventListener('click', this.documentClick);
-    },
-};
+                if (this.disabled) { return };
 
-new Vue({
-    el: '#app',
-    data: {
-        options: ['Red Shoes', 'Green Shoes', 'Blue Shoes'],
-        selected: ['Red Shoes'], // If array, it is treated as multiselect
-    },
-    components: {
-        inputSelect,
-    },
-});
+                let { model } = this;
+
+                if (this.treatAsMultiselect) {
+                    const indexOfOption = model.indexOf(option);
+
+                    if (indexOfOption === -1) {
+                        model.push(option);
+                    } else {
+                        model.splice(indexOfOption, 1);
+                    }
+                } else {
+                    model = option;
+                }
+
+                this.$emit('change', model);
+            },
+            isSelected(option) {
+                if (this.treatAsMultiselect) {
+                    return this.model.includes(option);
+                }
+
+                return option === this.model;
+            },
+            documentClick(event) {
+                if (!this.$el.contains(event.target)) {
+                    this.open = false;
+                }
+            },
+        },
+        template: `
+            <div
+                :class="['input-select', { open, disabled, error }]"
+                @click="showOptions"
+            >
+                <span
+                    v-if="label"
+                    :class="['input-label']"
+                    v-text="label"
+                ></span>
+
+                <span
+                    v-if="treatAsMultiselect"
+                    :class="['input-close']"
+                    @click.stop="open = false"
+                >
+                    <slot name="close-icon">
+                        &#x2715;
+                    </slot>
+                </span>
+
+                <span
+                    v-if="showSelectedValue"
+                    :class="['input-selected']"
+                    v-text="model"
+                ></span>
+
+                <div v-show="open" :class="['input-options']">
+                    <div
+                        v-for="(option, i) in options"
+                        :key="option"
+                        :class="['input-option', { 'selected': isSelected(option) }]"
+                        @click.stop="onSelect(option)"
+                    >
+                        <slot name="option" :option="option">
+                            {{ option }}
+                        </slot>
+                    </div>
+                </div>
+            </div>
+        `,
+    };
+
+
+    // EXAMPLE
+    new Vue({
+        el: '#app',
+        data: {
+            options: ['', 'Pineapple', 'Avocado', 'Melon', 100],
+            selectedOption: '', // If array, it is treated as multi-select
+        },
+        components: {
+            InputSelect,
+        },
+    });
 
 </script>
-

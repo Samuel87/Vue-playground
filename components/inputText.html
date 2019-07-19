@@ -1,10 +1,9 @@
 <div id="app">
     <input-text
-        placeholder="Write your message"
-        name="input-text"
-        label="Message"
+        placeholder="Jason Response"
+        name="name"
+        label="Your Name"
         required
-        :type="number"
         :error="message === ''"
         v-model="message"
     ></input-text>
@@ -15,61 +14,81 @@
 <script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
 <script>
 
-const inputText = {
-    template: `
-        <label class="input-text" :class="{ error: error }">
-            <span v-if="label" class="input-label" v-text="inputLabel">
-                <template v-if="required">*</template>
-            </span>
-
-            <input
-                class="input-text-field"
-                v-bind="$attrs"
-                :type="type"
-                :value="model"
-                @input="$emit('input', $event.target.value)"
-            >
-        </label>
-    `,
-    inheritAttrs: false,
-    model: {
-        prop: 'model',
-        event: 'input',
-    },
-    props: {
+    // COMPONENT
+    const InputText = {
+        name: 'input-text',
+        inheritAttrs: false,
         model: {
-            type: [String, Array, Boolean, Number],
-            default: null,
+            prop: 'model',
         },
-        type: {
-            type: String,
-            default: 'text',
+        props: {
+            model: {
+                type: String,
+                default: '',
+            },
+            type: {
+                type: String,
+                default: 'text',
+                validator(type) {
+                    return ['text', 'number'].indexOf(type) !== -1;
+                },
+            },
+            error: {
+                type: Boolean,
+                default: false,
+            },
+            disabled: {
+                type: Boolean,
+                default: false,
+            },
+            required: {
+                type: Boolean,
+                default: false,
+            },
+            label: String,
+            placeholder: String,
+            name: String,
         },
-        label: String,
-        required: {
-            type: Boolean,
-            default: false,
+        computed: {
+            formattedLabel() {
+                return this.required ? this.label + '*' : this.label;
+            },
         },
-        error: {
-            type: Boolean,
-            default: false,
-        }
-    },
-    computed: {
-        inputLabel() {
-            return this.required ? this.label + '*' : this.label;
-        },
-    },
-};
+        template: `
+            <label :class="['input-text', { error, disabled }]">
+                <span
+                    v-if="label"
+                    :class="['input-label']"
+                    v-text="formattedLabel"
+                >
+                    <template v-if="required">*</template>
+                </span>
 
-new Vue({
-    el: '#app',
-    data: {
-        message: '',
-    },
-    components: {
-        inputText,
-    },
-});
+                <input
+                    v-bind="$attrs"
+                    :value="model"
+                    :type="type"
+                    :disabled="disabled"
+                    :required="required"
+                    :placeholder="placeholder"
+                    :name="name"
+                    :class="['input-field']"
+                    @input="$emit('input', $event.target.value)"
+                >
+            </label>
+        `,
+    };
+
+
+    // EXAMPLE
+    new Vue({
+        el: '#app',
+        data: {
+            message: '',
+        },
+        components: {
+            InputText,
+        },
+    });
 
 </script>
