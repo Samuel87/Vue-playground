@@ -1,17 +1,15 @@
 <div id="app">
-    <load-more-scroller
-        :auto-load-offset="1000"
+    <infinite-scroller
+        :load-more-offset="800"
         :on-load-more="fetchMore"
         :on-load="fetchData"
-        button-label="Loading..."
-        auto-load
     >
         <beer-post
             v-for="beer in beers"
             :key="beer.id"
             :item="beer"
         ></beer-post>
-    </load-more-scroller>
+    </infinite-scroller>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -30,8 +28,8 @@
     }
 
     // COMPONENT
-    const LoadMoreScroller = {
-        name: 'load-more-scroller',
+    const InfiniteScroller = {
+        name: 'infinite-scroller',
         props: {
             onLoadMore: {
                 type: Function,
@@ -41,17 +39,9 @@
                 type: Function,
                 required: false,
             },
-            autoLoad: {
-                type: Boolean,
-                default: false,
-            },
-            autoLoadOffset: {
+            loadMoreOffset: {
                 type: Number,
                 default: 0,
-            },
-            buttonLabel: {
-                type: String,
-                required: true,
             },
         },
         data: () => ({
@@ -60,9 +50,7 @@
         mounted() {
             if (this.onLoad) {
                 this.onLoad(this.loadComplete);
-            }
 
-            if (this.autoLoad) {
                 window.addEventListener('scroll', this.debouncedHandleScroll);
             }
         },
@@ -74,7 +62,7 @@
                 const scroll = window.scrollY || window.pageYOffset;
                 const elTop = this.$el.getBoundingClientRect().top + scroll;
                 const viewportBottom = scroll + window.innerHeight;
-                const elBottom = elTop + this.$el.clientHeight - this.autoLoadOffset;
+                const elBottom = elTop + this.$el.clientHeight - this.loadMoreOffset;
 
                 return elBottom <= viewportBottom;
             },
@@ -82,20 +70,16 @@
                 this.loading = false;
             },
             debouncedHandleScroll: debounce(function() { // must not be an arrow fn
-                if (this.scrolledToBottom() && this.autoLoad) {
+                if (this.scrolledToBottom()) {
                     this.loading = true;
                     this.onLoadMore(this.loadComplete);
                 }
             }, 200),
         },
         template: `
-            <div class="load-more-scroller">
+            <div class="infinite-scroller">
                 <slot></slot>
-                <button
-                    class="load-more-button"
-                    @click="onLoadMore(loadComplete)"
-                    v-text="buttonLabel"
-                ></button>
+                <span v-if="loading" class="loader"></span>
             </div>
         `,
     };
@@ -117,7 +101,7 @@
     new Vue({
         el: '#app',
         components: {
-            LoadMoreScroller,
+            InfiniteScroller,
             BeerPost,
         },
         data: {

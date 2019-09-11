@@ -1,0 +1,31 @@
+<div id="app">
+    <input type="text" v-model="foo.value">
+
+    <child></child>
+</div>
+
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
+<script>
+    const Child = {
+        inject: {
+            foo: {},
+        },
+        template: `<div>{{ foo.value }}</div>`,
+    };
+
+
+    new Vue({
+        el: '#app',
+        components: {
+            Child,
+        },
+        data: {
+            foo: { value: 'baz' }, // Only objects are reactive by design
+        },
+        provide() {
+            const foo = this.foo;
+
+            return { foo };
+        },
+    });
+</script>

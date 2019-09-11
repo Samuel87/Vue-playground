@@ -24,7 +24,7 @@
         name: 'input-select',
         model: {
             prop: 'model',
-            event: 'change'
+            event: 'change',
         },
         props: {
             model: {
@@ -80,7 +80,7 @@
             onSelect(option) {
                 this.hideOptions();
 
-                if (this.disabled) { return };
+                if (this.disabled) { return; };
 
                 let { model } = this;
 
