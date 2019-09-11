@@ -11,7 +11,7 @@ Vue.mixin({
     }
 });
 
-const windowResize = {
+const windowResizeMixin = {
     data() {
         return {
             window: {
@@ -41,7 +41,7 @@ const windowResize = {
 
 new Vue({
     el: '#app',
-    mixins: [windowResize],
+    mixins: [windowResizeMixin],
 });
 
 </script>

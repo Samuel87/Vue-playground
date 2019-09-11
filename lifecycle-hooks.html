@@ -14,6 +14,9 @@ new Vue({
             Both creation hooks are also run during server-side rendering.
         */
     },
+    activated() {
+        // Called when a kept-alive component is activated.
+    },
     created() {
         /*
             Data is reactive and events are active.
@@ -34,6 +37,9 @@ new Vue({
             The updated hook runs after data changes on your component and the DOM re-renders.
             If you need to access the DOM after a property change, this is where to do it.
         */
+    },
+    deactivated() {
+        // Called when a kept-alive component is deactivated.
     },
     beforeDestroy() {
         /*

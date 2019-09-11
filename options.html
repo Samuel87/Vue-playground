@@ -2,44 +2,41 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
 <script>
+    // Vue options (ordered)
+    // https://vuejs.org/v2/style-guide/#Component-instance-options-order-recommended
 
-// Vue options (ordered)
-// https://vuejs.org/v2/style-guide/#Component-instance-options-order-recommended
-new Vue({
-    el: '#app',
-    name: '',
-    delimiters: [],
-    components: {},
-    directives: {},
-    filters: {},
-    mixins: [],
-    inheritAttrs: true,
-    model: {},
-    props: {},
-    data: {},
-    computed: {
-        /*
-        The end results for this and methods are the same.
-        However, computed properties are cached and will only re-evaluate
-        when some of its dependencies have changed. So it they wont be invoked
-        whenever a re-render happens.
-        */
-    },
-    watch: {
-        /*
-        The watch options should be used only for asynchronous or expensive operations
-        in response to data change. For simple operations use computed properties.
-        */
-    },
+    new Vue({
+        // Side Effects
+        el: '#app',
 
-    // lifecycle hooks here
+        // Global Awareness (Component only)
+        name: '',
 
-    methods: {
-        /*
-        A method invocation will always run the function whenever a re-render happens.
-        */
-    },
-    template: '',
-});
+        // Template Dependencies
+        components: {},
+        directives: {},
+        filters: {},
+
+        // Composition
+        mixins: [],
+
+        // Interface
+        inheritAttrs: true,
+        model: {},
+        props: {},
+
+        // Local State
+        data: {},
+        computed: {},
+
+        // Events
+        watch: {},
+
+        // Lifecycle Events
+        methods: {},
+
+        // Rendering
+        template: '',
+    });
 
 </script>
